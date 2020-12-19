@@ -19,3 +19,22 @@ def evaluarAlumno(nota):
 notaAlumno = int(input("Introduce la nota: "))
 
 print(evaluarAlumno(notaAlumno))
+
+trabajadores = ["Alex", "Ana", "Dani", "Alba", "Samu"]
+
+if "Pedro" in trabajadores:
+    print("Está en la lista")
+else:
+    print("No está en la lista")
+    
+lenguajes = "Java, Python, Php"
+
+if "Php" in lenguajes:
+    print("Está en el string")
+else:
+    print("No está en el string")
+    
+if "SQL" not in lenguajes:
+    print("No está en el string")
+else:
+    print("E3stá en el string")
