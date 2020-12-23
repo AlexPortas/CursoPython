@@ -18,7 +18,7 @@ while edad>64 or edad<18:
 if edad>=18:
     print("Puedes pasar, gracias!")
 
-print("Tu ed<ad es "+str(edad))
+print("Tu edad es "+str(edad))
 
 print("Vamos a hallar la raiz cuadrada de un numero")
 
@@ -35,5 +35,5 @@ while numero<0:
 
 if intentos<3:
     print("La raiz cuadrada es "+str(math.isqrt(numero)))
-else
+else:
     print("Intentelo más tarde")
