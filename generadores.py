@@ -19,3 +19,15 @@ pares = generadorPares(6)
 
 for i in pares:
     print(i)
+
+def capitales(*ciudades):
+    for capital in ciudades:
+        yield from capital
+        
+        
+
+capitales = capitales("Berlin", "Roma", "Madrid")
+
+print(next(capitales))
+
+print(next(capitales))
