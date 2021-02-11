@@ -2,14 +2,17 @@ def introducirNombres():
     nombres = []
     intentos = 0
     while intentos<3:
-        nombre = input("Introduce un nombre: ")
+        try:
+            nombre = input("Introduce un nombre: ")
     
-        if nombre in nombres:
-            raise ValueError("Error. Este nombre ya se a utilizado.")
-        else:
-            nombres.append(nombre)
-    
-        intentos+=1
+            if nombre in nombres:
+                raise ValueError
+            else:
+                nombres.append(nombre)
+        except ValueError:
+            print("Error. Este nombre ya se a utilizado. "+nombre)
+        finally:
+            intentos+=1
     
     return nombres
 
