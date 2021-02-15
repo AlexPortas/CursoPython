@@ -1,22 +1,32 @@
 class Persona():
-    nombre = ""
-    edad = 0
+    __nombre = ""
+    __edad = 0
     genero = "sin definir"
 
-    def __init__(self, nombre, edad, genero):
-        self.nombre = nombre
-        self.edad = edad
+    def __init__(self, nombre, genero):
+        self.__nombre = nombre
         self.genero = genero
 
+    def setEdad(self,ed):
+        if(ed<0 or ed>100):
+            print("Error en la edad.")
+        else:
+            self.__edad = ed
+            return self.__edad
+            
     def hablar(self):
-        return self.nombre + " está hablando"
+        return self.__nombre + " está hablando"
     
     def caminar(self):
-        return self.nombre + " está caminando"
+        return self.__nombre + " está caminando"
         
     def getDatos(self):
-        return "Nombre: " + self.nombre + ", edad: " + str(self.edad) + ", género: " + self.genero
+        return "Nombre: " + self.__nombre + ", edad: " + str(self.__edad) + ", género: " + self.genero
     
-p1 = Persona("Alex", 27, "masculino")
+p1 = Persona("Alex", "masculino")
+
+p1.setEdad(-9)
+p1.setEdad(25)
+p1.setEdad(1566)
 
 print(p1.getDatos())

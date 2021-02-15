@@ -10,11 +10,9 @@ class Cuenta():
 
     def ingresar(self, cant):
         self.saldo += cant
-        return "Se ha ingresado " + str(cant) + " €"
     
     def retirar(self, cant):
         self.saldo -= cant
-        return "Se ha retirado " +str(cant) + " €"
         
     def getDatos(self):
         return "Nº cuenta: " + self.n_cuenta + ", titular: " + self.titular + ", saldo: " + str(self.saldo)
