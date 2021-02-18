@@ -18,7 +18,7 @@ class Persona():
         return self.__nombre + " está hablando"
     
     def caminar(self):
-        return self.__nombre + " está caminando"
+        return self.__nombre + " está caminando" 
         
     def getDatos(self):
         return "Nombre: " + self.__nombre + ", edad: " + str(self.__edad) + ", género: " + self.genero
