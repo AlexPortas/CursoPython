@@ -1,5 +1,7 @@
 import requests
 
+import time
+
 from bs4 import BeautifulSoup
 
 from urllib.parse import urljoin
@@ -16,17 +18,28 @@ class PostExtractor():
 
     def extraerInfo(self):
         urlBase = 'http://python.beispiel.programmierenlernen.io/index.php'
-        r = requests.get(urlBase)
-        documento = BeautifulSoup(r.text, "html.parser")
         posts = []
-        for card in documento.select(".card-block"):
-            titulo = card.select(".card-title span")[1].text
-            emoticono = card.select_one(".emoji").text
-            contenido = card.select_one(".card-text").text
-            imagen = urljoin(urlBase,card.select_one("img").attrs["src"])
+        while urlBase!="":
+            time.sleep(2)
+            r = requests.get(urlBase)
+            documento = BeautifulSoup(r.text, "html.parser")
 
-            crawled = PostCrawled(titulo,emoticono, contenido, imagen)
-            posts.append(crawled)
+            for card in documento.select(".card-block"):
+                titulo = card.select(".card-title span")[1].text
+                emoticono = card.select_one(".emoji").text
+                contenido = card.select_one(".card-text").text
+                imagen = urljoin(urlBase,card.select_one("img").attrs["src"])
+
+                crawled = PostCrawled(titulo,emoticono, contenido, imagen)
+                posts.append(crawled)
+                
+            btnSiguiente = documento.select_one(".navigation .btn")
+            if btnSiguiente:
+                rutaAbsoluta = urljoin(urlBase,documento.select_one(".navigation .btn").attrs["href"])
+                print(rutaAbsoluta)
+                urlBase = rutaAbsoluta
+            else:
+                urlBase=""
 
         return posts
 
