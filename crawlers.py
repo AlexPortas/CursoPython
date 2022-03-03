@@ -2,6 +2,8 @@ import requests
 
 import time
 
+import csv
+
 from bs4 import BeautifulSoup
 
 from urllib.parse import urljoin
@@ -52,3 +54,8 @@ for p in lista:
     print(p.contenido)
     print(p.imagen)
     print()
+
+with open('posts.csv','w', newline='', encoding='utf-8') as csvfile:
+    postwriter = csv.writer(csvfile, delimiter=';', quotechar='|', quoting=csv.QUOTE_MINIMAL)
+    for mipost in lista:
+        postwriter.writerow([mipost.emoticono, mipost.titulo, mipost.contenido, mipost.imagen])
