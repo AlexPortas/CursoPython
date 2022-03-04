@@ -13,7 +13,6 @@ def generadorPares(limite):        #generador
     while num<limite:
         yield num*2
         num+=1 
-    return pares
 
 pares = generadorPares(6)
 
@@ -22,10 +21,18 @@ for i in pares:
 
 def capitales(*ciudades):
     for capital in ciudades:
+        yield capital
+        
+capitales = capitales("Berlin", "Roma", "Madrid")
+
+print(next(capitales))
+
+print(next(capitales))
+
+def capitales(*ciudades):
+    for capital in ciudades:
         yield from capital
         
-        
-
 capitales = capitales("Berlin", "Roma", "Madrid")
 
 print(next(capitales))
