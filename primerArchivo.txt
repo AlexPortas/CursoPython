@@ -1,2 +1,3 @@
 archivo creado con python
  añadir linea con python
+estoy manipulando el documento con python
