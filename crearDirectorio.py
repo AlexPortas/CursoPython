@@ -1,16 +1,15 @@
 import os
-import io
-
-#os.makedirs('PruebaDirectorio2')
 
 os.chdir('PruebaDirectorio2')
 
 print(os.getcwd())
 
-os.rename('renombrado.txt', 'Renombrado.txt')
+os.remove('Renombrado.txt')
+
+os.remove('archivoPython.txt')
 
 print(os.listdir('./'))
 
-os.remove('archivoConPython.txt')
+os.chdir('..')
 
-print(os.listdir('./'))
+os.rmdir('PruebaDirectorio2')
