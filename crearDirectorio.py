@@ -1,28 +1,16 @@
 import os
 import io
 
-os.makedirs('PruebaDirectorio2')
+#os.makedirs('PruebaDirectorio2')
 
 os.chdir('PruebaDirectorio2')
 
 print(os.getcwd())
 
-f = io.open('archivoPython.txt', 'w')
+os.rename('renombrado.txt', 'Renombrado.txt')
 
-f.write('Este archivo se creo con Python en este directorio')
+print(os.listdir('./'))
 
-f.close()
-
-f = io.open('archivoConPython.txt', 'w')
-
-f.write('Este archivo se creo con Python en este directorio')
-
-f.close()
-
-f = io.open('archivoPrueba.txt', 'w')
-
-f.write('Este archivo se creo con Python en este directorio')
-
-f.close()
+os.remove('archivoConPython.txt')
 
 print(os.listdir('./'))
