@@ -8,8 +8,16 @@ raiz.resizable(0,0)
 
 # cambiar imagen!! tiene que ser un .ico!!  raiz.iconbitmap("favicon.ico")
 
-raiz.geometry("500x450")
-
 raiz.config(bg="blue")
+
+# crear marco
+
+frame = Frame()
+
+frame.pack()
+
+frame.config(bg="red")
+
+frame.config(width="650", height="400")
 
 raiz.mainloop()
