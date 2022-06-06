@@ -1,4 +1,5 @@
 from tkinter import *
+from tkinter import messagebox
 
 raiz=Tk()
 
@@ -50,14 +51,23 @@ correoLabel.grid(row=4, column=0, sticky="w")
 
 cuadroTextoComentario=Text(frame, width=15, height=10)
 
+scrollVertical=Scrollbar(frame, command=cuadroTextoComentario.yview)
+
+scrollVertical.grid(row=5, column=2, sticky="nsew")
+
 cuadroTextoComentario.grid(row=5, column=1, padx=15, pady=15)
+
+cuadroTextoComentario.config(yscrollcommand=scrollVertical.set)
 
 comentarioLabel=Label(frame, text="Comentario: ")
 
 comentarioLabel.grid(row=5, column=0, sticky="w")
 
-btnEnviar=Button(frame, text="Enviar")
+def funcionClick():
+    messagebox.showinfo("Saludo", "Hola " + cuadroTextoNombre.get())
 
-btnEnviar.grid(row=6, column=1)
+btnEnviar=Button(raiz, text="Enviar", command=funcionClick)
+
+btnEnviar.pack()
 
 raiz.mainloop()
