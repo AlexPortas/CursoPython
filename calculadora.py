@@ -1,5 +1,8 @@
+from difflib import restore
 from tkinter import *
 from tkinter import messagebox
+
+from sqlalchemy import true
 
 raiz=Tk()
 
@@ -7,18 +10,58 @@ frame=Frame(raiz)
 
 frame.pack()
 
-resultado=StringVar(0)
+operacion=""
 
-cuadroTextoResultado=Entry(frame, textvariable=resultado, font=('Arial 22'))
+operando1=""
+
+operando2=""
+
+resultado=0
+
+digitoDisplay=StringVar()
+
+cuadroTextoResultado=Entry(frame, textvariable=digitoDisplay, font=('Arial 22'))
 
 cuadroTextoResultado.grid(row=0, column=0, columnspan=4, pady=5)
 
 cuadroTextoResultado.config(background="black", fg="#00db00", justify="right")
 
-#-------------------- Pulsación números
+digitoDisplay.set('0')
+
+#-------------------- Funciones
+puntoIncluido=False
 
 def clicarTeclas(n):
-    resultado.set(resultado.get() + n)
+    global puntoIncluido, operacion
+    if digitoDisplay.get()=="" and n=='0':
+        return
+    if puntoIncluido and n=='.':
+        return
+    if operacion!='':
+        digitoDisplay.set(n)
+        operacion=''
+    else:
+        if digitoDisplay.get()!='0' or n=='.':
+            digitoDisplay.set(digitoDisplay.get() + n)
+        else:
+            digitoDisplay.set(n)
+    if n=='.':
+        puntoIncluido=True
+
+def suma(oper):
+    global operacion, resultado, puntoIncluido
+    operacion=oper
+    resultado+=int(digitoDisplay.get())
+    digitoDisplay.set(resultado)
+    puntoIncluido=False
+
+def total(oper):
+    global resultado, operacion, puntoIncluido
+    operacion=oper
+    resultado+=int(digitoDisplay.get())
+    digitoDisplay.set(resultado)
+    resultado=0
+    puntoIncluido=False
 
 #-------------------- Primera fila
 
@@ -34,7 +77,7 @@ btn3=Button(frame, text="3", width=10, command=lambda:clicarTeclas("3"))
 
 btn3.grid(row=1, column=2)
 
-btnDividir=Button(frame, text="/", width=10)
+btnDividir=Button(frame, text="/", width=10, command=lambda:('/'))
 
 btnDividir.grid(row=1, column=3)
 
@@ -52,7 +95,7 @@ btn6=Button(frame, text="6", width=10, command=lambda:clicarTeclas("6"))
 
 btn6.grid(row=2, column=2)
 
-btnMultiplicar=Button(frame, text="X", width=10)
+btnMultiplicar=Button(frame, text="X", width=10, command=lambda:('*'))
 
 btnMultiplicar.grid(row=2, column=3)
 
@@ -70,13 +113,13 @@ btn9=Button(frame, text="9", width=10, command=lambda:clicarTeclas("9"))
 
 btn9.grid(row=3, column=2)
 
-btnRestar=Button(frame, text="-", width=10)
+btnRestar=Button(frame, text="-", width=10, command=lambda:('-'))
 
 btnRestar.grid(row=3, column=3)
 
 #------------ Cuarta fila
 
-btnResultado=Button(frame, text="=", width=10)
+btnResultado=Button(frame, text="=", width=10, command=lambda:total('='))
 
 btnResultado.grid(row=4, column=0)
 
@@ -88,7 +131,7 @@ btnPunto=Button(frame, text=".", width=10, command=lambda:clicarTeclas("."))
 
 btnPunto.grid(row=4, column=2)
 
-btnSumar=Button(frame, text="+", width=10)
+btnSumar=Button(frame, text="+", width=10, command=lambda:suma('+'))
 
 btnSumar.grid(row=4, column=3)
 
