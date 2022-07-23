@@ -51,15 +51,21 @@ def clicarTeclas(n):
 def suma(oper):
     global operacion, resultado, puntoIncluido
     operacion=oper
-    resultado+=int(digitoDisplay.get())
-    digitoDisplay.set(resultado)
+    resultado+=float(digitoDisplay.get())
+    if resultado.is_integer():
+        digitoDisplay.set(int(resultado))
+    else:
+        digitoDisplay.set(resultado)
     puntoIncluido=False
 
 def total(oper):
     global resultado, operacion, puntoIncluido
     operacion=oper
-    resultado+=int(digitoDisplay.get())
-    digitoDisplay.set(resultado)
+    resultado+=float(digitoDisplay.get())
+    if resultado.is_integer():
+        digitoDisplay.set(int(resultado))
+    else:
+        digitoDisplay.set(resultado)
     resultado=0
     puntoIncluido=False
 
