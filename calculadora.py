@@ -1,8 +1,4 @@
-from difflib import restore
 from tkinter import *
-from tkinter import messagebox
-
-from sqlalchemy import true
 
 raiz=Tk()
 
@@ -11,10 +7,6 @@ frame=Frame(raiz)
 frame.pack()
 
 operacion=""
-
-operando1=""
-
-operando2=""
 
 resultado=0
 
