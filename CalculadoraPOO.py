@@ -8,6 +8,8 @@ class Calculadora:
         self.ventana=ventana
         self.ventana.title('Calculadora')
         self.operacion = ""
+        self.puntoIncluido = False
+        self.resultado = False
 
         #agregar display
         self.display=Entry(ventana, font=('Arial 22'))
@@ -44,17 +46,36 @@ class Calculadora:
                 botones[contador].grid(row=fila, column=columna)
                 contador+=1 
 
+        self.mostrarDisplay('0')
+
     def colocarBtn(self, valor, mostrar=True):
         return Button(self.ventana, text=valor, width=10, font=('Courier', 9), command=lambda:self.pulsacionesTeclas(valor, mostrar))
 
     def pulsacionesTeclas(self, valor, mostrar):
+        if self.operacion=='' and valor==0:
+            return
+        if self.operacion=='' and valor!=0:
+            self.borrarDisplay()
+        if self.puntoIncluido and valor=='.':
+            return
         if mostrar:
-            self.operacion+=str(valor)
-            self.mostrarDisplay(valor)
+            if self.resultado and str(valor).isdigit():
+                self.borrarDisplay()
+                self.operacion=str(valor)
+                self.mostrarDisplay(valor)
+            else:
+                self.operacion+=str(valor)
+                self.mostrarDisplay(valor)
+            self.resultado=False
         else:
             self.operacion=re.sub(u"\u00d7", "*", self.operacion)
             self.borrarDisplay()
             self.mostrarDisplay(str(eval(self.operacion)))
+            self.puntoIncluido=False
+            self.resultado=True
+            self.operacion=str(eval(self.operacion))
+        if valor=='.':
+            self.puntoIncluido=True               
 
     def mostrarDisplay(self, valor):
         self.display.insert(END, valor)
