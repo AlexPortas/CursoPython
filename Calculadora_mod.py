@@ -1,6 +1,6 @@
 from tkinter import *
 
-from botoneraCalc import *  
+from moduloCalculadoras.botoneraCalc import *  
 
 raiz=Tk()
 

@@ -1,6 +1,6 @@
 from tkinter import *
 
-from operacionesCalc import *  
+from moduloCalculadoras.operacionesCalc import *  
 
 def construirBotones(self, botones, filas, columnas):
     contador=0

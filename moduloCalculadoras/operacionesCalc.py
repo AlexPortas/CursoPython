@@ -1,7 +1,7 @@
 from tkinter import *
 import re
 
-from operacionesDisplayCalc import *  
+from moduloCalculadoras.operacionesDisplayCalc import *  
 
 def pulsacionesTeclas(self, valor, mostrar):
     if self.operacion=='' and valor==0:
