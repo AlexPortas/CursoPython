@@ -11,8 +11,8 @@ raiz.title("Gestion usuarios aplicación")
 
 # ---------------------------------- Funciones --------------------------------
 def refrescar():
-    frameDatos.reset()
-
+    frameDatos.destroy()
+       
 def limpiarCampos():
     miId.set("")
     miNick.set("")
@@ -23,14 +23,58 @@ def limpiarCampos():
 
 def insertarUser():
     conexion=mysql.connector.connect(host="localhost", database="app-vontade", user="root", password="")
-
     cursor=conexion.cursor()
 
-    cursor.execute("INSERT INTO USERS_APLICACION VALUES( null, '" + miNick.get() + "','" + miPwd.get() + "', '" + miTUser.get() + "', '" + miNombre.get() + "','" + miCorreo.get() + "')")
-
+    #cursor.execute("INSERT INTO USERS_APLICACION VALUES( null, '" + miNick.get() + "','" + miPwd.get() + "', '" + miTUser.get() + "', '" + miNombre.get() + "','" + miCorreo.get() + "')")
+    datos=miNick.get(), miPwd.get(), miTUser.get(), miNombre.get(), miCorreo.get() 
+    cursor.execute("INSERT INTO USERS_APLICACION VALUES( null, ?, ?, ?, ?)", (datos))
     conexion.commit()
 
-    messagebox.showinfo("Nuevo ussuario", "Registro insertado correctamente")
+    messagebox.showinfo("Nuevo usuario", "Registro insertado correctamente")
+
+    cursor.close()
+    conexion.close()
+
+def leerUserPorID():
+    conexion=mysql.connector.connect(host="localhost", database="app-vontade", user="root", password="")
+    cursor=conexion.cursor()
+
+    cursor.execute("SELECT * FROM USERS_APLICACION WHERE ID_USER_APLICACION=" + miId.get())
+    datosUser=cursor.fetchall()
+    for u in datosUser:
+        miId.set(u[0])
+        miNick.set(u[1])
+        miPwd.set(u[2])
+        miTUser.set(u[3])
+        miNombre.set(u[4])
+        miCorreo.set(u[5])
+
+    cursor.close()
+    conexion.close()
+
+
+def modificarUser():
+    conexion=mysql.connector.connect(host="localhost", database="app-vontade", user="root", password="")
+    cursor=conexion.cursor()
+
+    #cursor.execute("UPDATE USERS_APLICACION SET nick='" + miNick.get() + "', pwd='" + miPwd.get() + "', tipo_user='" + miTUser.get() + "', nombre='" + miNombre.get() + "', correo='" + miCorreo.get() + "' WHERE ID_USER_APLICACION='" + miId.get() + "'")
+    datos=miNick.get(), miPwd.get(), miTUser.get(), miNombre.get(), miCorreo.get() 
+    cursor.execute("UPDATE USERS_APLICACION SET nick=?, pwd=?, tipo_user=?, nombre=?, correo=? WHERE ID_USER_APLICACION='" + miId.get(), (datos))
+    conexion.commit()
+
+    messagebox.showinfo("Modificar usuario", "Registro modificado correctamente")
+
+    cursor.close()
+    conexion.close()
+
+def borrarUser():
+    conexion=mysql.connector.connect(host="localhost", database="app-vontade", user="root", password="")
+    cursor=conexion.cursor()
+
+    cursor.execute("DELETE FROM USERS_APLICACION WHERE ID_USER_APLICACION='" + miId.get() + "'")
+    conexion.commit()
+
+    messagebox.showinfo("Borrar usuario", "Registro borrado correctamente")
 
     cursor.close()
     conexion.close()
@@ -55,12 +99,13 @@ borrarMenu.add_command(label="Desseleccionar", command=limpiarCampos)
 
 crudMenu=Menu(barraMenu, tearoff=0)
 crudMenu.add_command(label="Crear usuario", command=insertarUser)
-crudMenu.add_command(label="Modificar usuario")
-crudMenu.add_command(label="Eliminar usuario")
+crudMenu.add_command(label="Leer usuario por Id", command=leerUserPorID)
+crudMenu.add_command(label="Modificar usuario", command=modificarUser)
+crudMenu.add_command(label="Eliminar usuario", command=borrarUser)
 
 barraMenu.add_cascade(label="Refrescar", menu=datosMenu)
 barraMenu.add_cascade(label="Desseleccionar usuario", menu=borrarMenu)
-barraMenu.add_cascade(label="Modificar datos", menu=crudMenu)
+barraMenu.add_cascade(label="Acciones", menu=crudMenu)
 
 frameDatos=Frame(raiz)
 
