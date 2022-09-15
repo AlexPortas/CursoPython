@@ -11,7 +11,34 @@ raiz.title("Gestion usuarios aplicación")
 
 # ---------------------------------- Funciones --------------------------------
 def refrescar():
-    frameDatos.destroy()
+    for widget in frameDatos.winfo_children():
+        widget.destroy()
+    idLabel=Label(frameDatos, text="Id").grid(row=0, column=0, sticky="w", padx=10)
+    nickLabel=Label(frameDatos, text="Nick").grid(row=0, column=1, sticky="w", padx=10)
+    contraseñaLabel=Label(frameDatos, text="Contraseña").grid(row=0, column=2, sticky="w", padx=10)
+    tipoUserLabel=Label(frameDatos, text="Tipo usuario").grid(row=0, column=3, sticky="w", padx=10)
+    nombreLabel=Label(frameDatos, text="Nombre").grid(row=0, column=4, sticky="w", padx=10)
+    correoLabel=Label(frameDatos, text="Dirección electronica").grid(row=0, column=5, sticky="w", padx=10)
+
+    conexion=mysql.connector.connect(host="localhost", database="app-vontade", user="root", password="")
+
+    cursor=conexion.cursor()
+
+    cursor.execute("SELECT * FROM USERS_APLICACION")
+
+    users=cursor.fetchall()
+    cont=1
+    for u in users:
+        idLabel=Label(frameDatos, text=u[0]).grid(row=cont, column=0, sticky="w", padx=10)
+        nickLabel=Label(frameDatos, text=u[1]).grid(row=cont, column=1, sticky="w", padx=10)
+        contraseñaLabel=Label(frameDatos, text=u[2]).grid(row=cont, column=2, sticky="w", padx=10)
+        tipoUserLabel=Label(frameDatos, text=u[3]).grid(row=cont, column=3, sticky="w", padx=10)
+        nombreLabel=Label(frameDatos, text=u[4]).grid(row=cont, column=4, sticky="w", padx=10)
+        correoLabel=Label(frameDatos, text=u[5]).grid(row=cont, column=5, sticky="w", padx=10)
+        cont+=1
+    Label(frameDatos).grid(row=cont,pady=10)
+    cursor.close()
+    conexion.close()
        
 def limpiarCampos():
     miId.set("")
@@ -25,9 +52,9 @@ def insertarUser():
     conexion=mysql.connector.connect(host="localhost", database="app-vontade", user="root", password="")
     cursor=conexion.cursor()
 
-    #cursor.execute("INSERT INTO USERS_APLICACION VALUES( null, '" + miNick.get() + "','" + miPwd.get() + "', '" + miTUser.get() + "', '" + miNombre.get() + "','" + miCorreo.get() + "')")
-    datos=miNick.get(), miPwd.get(), miTUser.get(), miNombre.get(), miCorreo.get() 
-    cursor.execute("INSERT INTO USERS_APLICACION VALUES( null, ?, ?, ?, ?)", (datos))
+    cursor.execute("INSERT INTO USERS_APLICACION VALUES( null, '" + miNick.get() + "','" + miPwd.get() + "', '" + miTUser.get() + "', '" + miNombre.get() + "','" + miCorreo.get() + "')")
+    #datos=miNick.get(), miPwd.get(), miTUser.get(), miNombre.get(), miCorreo.get() 
+    #cursor.execute("INSERT INTO USERS_APLICACION VALUES( null, ?, ?, ?, ?, ?)", (datos))
     conexion.commit()
 
     messagebox.showinfo("Nuevo usuario", "Registro insertado correctamente")
