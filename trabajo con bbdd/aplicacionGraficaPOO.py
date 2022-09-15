@@ -1,5 +1,6 @@
+from tkinter import simpledialog, messagebox
 from tkinter import *
-import mysql.connector
+from ConexionesBBDD import *
 
 class CrudPOO(Frame):
     def __init__(self, raiz):
@@ -11,31 +12,158 @@ class CrudPOO(Frame):
         self.miNombre=StringVar()
         self.miCorreo=StringVar()
 
+        #------------- barra de menu
+        self.barraMenu=Menu(raiz)
+        raiz.config(menu=self.barraMenu)
+
         super().__init__(raiz)
         self.master=raiz
         self.pack()
+        
+        self.frameDatos=Frame(raiz)
+        self.frameDatos.pack()   
 
-        self.crear_widgets()
+        self.crear_datos()
+        self.crear_menu()
+        
+    def crear_menu(self):
+        self.datosMenu=Menu(self.barraMenu, tearoff=0)
+        self.datosMenu.add_command(label="Mostrar datos", command=self.actualizarDatos)
+
+        self.borrarMenu=Menu(self.barraMenu, tearoff=0)
+        self.borrarMenu.add_command(label="Desseleccionar", command=self.limpiarCampos)
+
+        self.crudMenu=Menu(self.barraMenu, tearoff=0)
+        self.crudMenu.add_command(label="Crear usuario", command=self.insertarUser)
+        self.crudMenu.add_command(label="Leer usuario por Id", command=self.leerUserPorID)
+        self.crudMenu.add_command(label="Modificar usuario", command=self.modificarUser)
+        self.crudMenu.add_command(label="Eliminar usuario", command=self.borrarUser)
+
+        self.barraMenu.add_cascade(label="Refrescar", menu=self.datosMenu)
+        self.barraMenu.add_cascade(label="Desseleccionar usuario", menu=self.borrarMenu)
+        self.barraMenu.add_cascade(label="Acciones", menu=self.crudMenu)
 
     def crear_widgets(self):
-        self.cuadroTextoId=Entry(self, textvariable=self.miId).grid(row=0, column=1, padx=5, pady=5)
-        self.idLabel=Label(self, text="Id: ").grid(row=0, column=0, sticky="w", padx=10)
+        self.cuadroTextoId=Entry(self, textvariable=self.miId).grid(row=0, column=3, padx=5, pady=5)
+        self.idLabel=Label(self, text="Id: ").grid(row=0, column=2, sticky="w", padx=10)
 
-        self.cuadroTextoNick=Entry(self, textvariable=self.miNick).grid(row=1, column=1, padx=5, pady=5)
-        self.nickLabel=Label(self, text="Nick: ").grid(row=1, column=0, sticky="w", padx=10)
+        self.cuadroTextoNick=Entry(self, textvariable=self.miNick).grid(row=1, column=3, padx=5, pady=5)
+        self.nickLabel=Label(self, text="Nick: ").grid(row=1, column=2, sticky="w", padx=10)
 
-        self.cuadroTextoPwd=Entry(self, textvariable=self.miPwd).grid(row=2, column=1, padx=5, pady=5)
-        self.contraseñaLabel=Label(self, text="Contraseña: ").grid(row=2, column=0, sticky="w", padx=10)
+        self.cuadroTextoPwd=Entry(self, textvariable=self.miPwd).grid(row=2, column=3, padx=5, pady=5)
+        self.contraseñaLabel=Label(self, text="Contraseña: ").grid(row=2, column=2, sticky="w", padx=10)
 
-        self.cuadroTextoTUser=Entry(self, textvariable=self.miTUser).grid(row=3, column=1, padx=5, pady=5)
-        self.tipoUserLabel=Label(self, text="Tipo usuario: ").grid(row=3, column=0, sticky="w", padx=10)
+        self.cuadroTextoTUser=Entry(self, textvariable=self.miTUser).grid(row=3, column=3, padx=5, pady=5)
+        self.tipoUserLabel=Label(self, text="Tipo usuario: ").grid(row=3, column=2, sticky="w", padx=10)
 
-        self.cuadroTextoNombre=Entry(self, textvariable=self.miNombre).grid(row=4, column=1, padx=5, pady=5)
-        self.nombreLabel=Label(self, text="Nombre: ").grid(row=4, column=0, sticky="w", padx=10)
+        self.cuadroTextoNombre=Entry(self, textvariable=self.miNombre).grid(row=4, column=3, padx=5, pady=5)
+        self.nombreLabel=Label(self, text="Nombre: ").grid(row=4, column=2, sticky="w", padx=10)
 
-        self.cuadroTextoCorreo=Entry(self, textvariable=self.miCorreo).grid(row=5, column=1, padx=5, pady=5)
-        self.correoLabel=Label(self, text="Dirección electronica: ").grid(row=5, column=0, sticky="w", padx=10)
+        self.cuadroTextoCorreo=Entry(self, textvariable=self.miCorreo).grid(row=5, column=3, padx=5, pady=5)
+        self.correoLabel=Label(self, text="Dirección electronica: ").grid(row=5, column=2, sticky="w", padx=10)
 
+    def crear_datos(self):
+        self.idLabel=Label(self.frameDatos, text="Id").grid(row=0, column=0, sticky="w", padx=10)
+        self.nickLabel=Label(self.frameDatos, text="Nick").grid(row=0, column=1, sticky="w", padx=10)
+        self.contraseñaLabel=Label(self.frameDatos, text="Contraseña").grid(row=0, column=2, sticky="w", padx=10)
+        self.tipoUserLabel=Label(self.frameDatos, text="Tipo usuario").grid(row=0, column=3, sticky="w", padx=10)
+        self.frameDatos.nombreLabel=Label(self.frameDatos, text="Nombre").grid(row=0, column=4, sticky="w", padx=10)
+        self.frameDatos.correoLabel=Label(self.frameDatos, text="Dirección electronica").grid(row=0, column=5, sticky="w", padx=10)
+        conexion=conectarBBDD("localhost","app-vontade","root","")
+
+        cursor=conexion.cursor()
+
+        cursor.execute("SELECT * FROM USERS_APLICACION")
+
+        users=cursor.fetchall()
+        cont=1
+        for u in users:
+            Label(self.frameDatos, text=u[0]).grid(row=cont, column=0, sticky="w", padx=10)
+            Label(self.frameDatos, text=u[1]).grid(row=cont, column=1, sticky="w", padx=10)
+            Label(self.frameDatos, text=u[2]).grid(row=cont, column=2, sticky="w", padx=10)
+            Label(self.frameDatos, text=u[3]).grid(row=cont, column=3, sticky="w", padx=10)
+            Label(self.frameDatos, text=u[4]).grid(row=cont, column=4, sticky="w", padx=10)
+            Label(self.frameDatos, text=u[5]).grid(row=cont, column=5, sticky="w", padx=10)
+            cont+=1
+        Label(self.frameDatos).grid(row=cont,pady=1)
+        cursor.close()
+        conexion.close()
+
+    def actualizarDatos(self):
+        for widget in self.frameDatos.winfo_children():
+            widget.destroy()
+        self.crear_datos()
+
+    def limpiarCampos(self):
+        self.miId.set("")
+        self.miNick.set("")
+        self.miPwd.set("")
+        self.miTUser.set("")
+        self.miNombre.set("")
+        self.miCorreo.set("")
+
+    def insertarUser(self):
+        conexion=mysql.connector.connect(host="localhost", database="app-vontade", user="root", password="")
+        cursor=conexion.cursor()
+
+        #cursor.execute("INSERT INTO USERS_APLICACION VALUES( null, '" + miNick.get() + "','" + miPwd.get() + "', '" + miTUser.get() + "', '" + miNombre.get() + "','" + miCorreo.get() + "')")
+        datos=self.miNick.get(), self.miPwd.get(), self.miTUser.get(), self.miNombre.get(), self.miCorreo.get() 
+        cursor.execute("INSERT INTO USERS_APLICACION VALUES( null, ?, ?, ?, ?, ?)", (datos))
+        conexion.commit()
+
+        messagebox.showinfo("Nuevo usuario", "Registro insertado correctamente")
+
+        cursor.close()
+        conexion.close()
+        self.actualizarDatos()
+        self.limpiarCampos()
+
+    def leerUserPorID(self):
+        idABuscar=simpledialog.askstring("¿?","Que usuario quieres buscar? (ID)")
+        print(idABuscar)
+        
+        conexion=conectarBBDD("localhost","app-vontade","root","")
+        cursor=conexion.cursor()
+
+        cursor.execute("SELECT * FROM USERS_APLICACION WHERE ID_USER_APLICACION=" + idABuscar)
+        datosUser=cursor.fetchall()
+        self.crear_widgets()
+        for u in datosUser:
+            self.miId.set(u[0])
+            self.miNick.set(u[1])
+            self.miPwd.set(u[2])
+            self.miTUser.set(u[3])
+            self.miNombre.set(u[4])
+            self.miCorreo.set(u[5])
+
+        cursor.close()
+        conexion.close()
+
+    def modificarUser(self):
+        conexion=mysql.connector.connect(host="localhost", database="app-vontade", user="root", password="")
+        cursor=conexion.cursor()
+
+        #cursor.execute("UPDATE USERS_APLICACION SET nick='" + miNick.get() + "', pwd='" + miPwd.get() + "', tipo_user='" + miTUser.get() + "', nombre='" + miNombre.get() + "', correo='" + miCorreo.get() + "' WHERE ID_USER_APLICACION='" + miId.get() + "'")
+        datos=self.miNick.get(), self.miPwd.get(), self.miTUser.get(), self.miNombre.get(), self.miCorreo.get() 
+        cursor.execute("UPDATE USERS_APLICACION SET nick=?, pwd=?, tipo_user=?, nombre=?, correo=? WHERE ID_USER_APLICACION='" + self.miId.get(), (datos))
+        conexion.commit()
+
+        messagebox.showinfo("Modificar usuario", "Registro modificado correctamente")
+
+        cursor.close()
+        conexion.close()
+
+    def borrarUser(self):
+        conexion=mysql.connector.connect(host="localhost", database="app-vontade", user="root", password="")
+        cursor=conexion.cursor()
+
+        cursor.execute("DELETE FROM USERS_APLICACION WHERE ID_USER_APLICACION='" + self.miId.get() + "'")
+        conexion.commit()
+
+        messagebox.showinfo("Borrar usuario", "Registro borrado correctamente")
+
+        cursor.close()
+        conexion.close()
 
 root=Tk()
 app=CrudPOO(root)
