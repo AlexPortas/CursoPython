@@ -16,15 +16,7 @@ def divide(n1, n2):
 num1 = 15
 num2 = 3
 
-operacion = input("Introduce la opwearión a realizar: (+, -, *, /)")
 
-if operacion == "+":
-    print(suma(num1,num2))
-elif operacion == "-":
-    print(resta(num1,num2))
-elif operacion == "*":
-    print(multiplica(num1,num2))
-elif operacion == "/":
-    print(divide(num1,num2))
-else:
-    print("Operación no encontrada")
+
+d="alex","coche",32
+print(d,type(d))

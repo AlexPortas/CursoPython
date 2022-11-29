@@ -129,7 +129,8 @@ class CrudPOO(Frame):
 
         #cursor.execute("INSERT INTO USERS_APLICACION VALUES( null, '" + self.miNick.get() + "','" + self.miPwd.get() + "', '" + self.miTUser.get() + "', '" + self.miNombre.get() + "','" + self.miCorreo.get() + "')")
         datos=self.miNick.get(), self.miPwd.get(), self.miTUser.get(), self.miNombre.get(), self.miCorreo.get() 
-        cursor.execute("INSERT INTO USERS_APLICACION VALUES(?, ?, ?, ?, ?)", (datos))
+        sql="INSERT INTO USERS_APLICACION (NICK, PWD, TIPO_USER, NOMBRE, CORREO) VALUES(%s, %s, %s, %s, %s)"
+        cursor.execute(sql, (datos))
         conexion.commit()
 
         messagebox.showinfo("Nuevo usuario", "Registro insertado correctamente")
@@ -166,7 +167,7 @@ class CrudPOO(Frame):
 
         #cursor.execute("UPDATE USERS_APLICACION SET nick='" + miNick.get() + "', pwd='" + miPwd.get() + "', tipo_user='" + miTUser.get() + "', nombre='" + miNombre.get() + "', correo='" + miCorreo.get() + "' WHERE ID_USER_APLICACION='" + miId.get() + "'")
         datos=self.miNick.get(), self.miPwd.get(), self.miTUser.get(), self.miNombre.get(), self.miCorreo.get() 
-        cursor.execute("UPDATE USERS_APLICACION SET nick=?, pwd=?, tipo_user=?, nombre=?, correo=? WHERE ID_USER_APLICACION='" + self.miId.get(), (datos))
+        cursor.execute("UPDATE USERS_APLICACION SET nick=%s, pwd=%s, tipo_user=%s, nombre=%s, correo=%s WHERE ID_USER_APLICACION='" + self.miId.get(), (datos))
         conexion.commit()
 
         messagebox.showinfo("Modificar usuario", "Registro modificado correctamente")
