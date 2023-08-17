@@ -212,6 +212,7 @@ t1.anhadir_actividad("xoves",2,2,d2a)
 t1.anhadir_actividad("xoves",3,5,d3b)
 u1.mostrar_horario()
 t1.mostrar_horario()
+print(t1.horario)
 '''
 # meter datox
 
@@ -246,3 +247,8 @@ quitar_en_horario(u2,t3,"lunes",5)
 quitar_en_horario(u2,t3,"lunes",6)
 quitar_en_horario(u1,t1,"lunes",1)
 '''
+s1="1,2,3"
+s2="[1,2,3]"
+print(s1,s2)
+s1b=[s1]
+print(s1b[0])

@@ -1,4 +1,4 @@
-capitales = {"España":"Madrid","Francia":"Paris","Italia":"Roma"}
+capitales = {"España":"Madrid","Francia":"Paris","Italia":"Roma", "n":0}
 
 print(capitales)
 
@@ -23,3 +23,11 @@ print(capitales.keys())
 print(capitales.values())
 
 print(len(capitales))
+
+print("Alemania" in capitales)
+capitales["n"]+=40
+
+print(capitales)
+
+for i in capitales:
+    print(i,capitales[i])
