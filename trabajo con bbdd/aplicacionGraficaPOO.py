@@ -4,6 +4,12 @@ from FuncionesCRUD import *
 
 class CrudPOO(Frame):
     def __init__(self, raiz):
+        # ----- Config ventana
+        self.ventana = raiz
+        self.ventana.title("App Gestor de Usuarips de la aplicacióm")
+        self.ventana.resizable(1,1)
+        self.ventana.wm_iconbitmap("recursos/logo.ico")
+        
         # ----- Variables de control
         self.miId=StringVar()
         self.miNick=StringVar()
@@ -13,6 +19,7 @@ class CrudPOO(Frame):
         self.miCorreo=StringVar()
 
         #------------- barra de menu
+
         self.barraMenu=Menu(raiz)
         raiz.config(menu=self.barraMenu)
 
