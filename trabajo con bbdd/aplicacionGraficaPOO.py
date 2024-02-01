@@ -11,7 +11,7 @@ class CrudPOO(Frame):
         self.ventana.wm_iconbitmap("recursos/logo.ico")
         
         # ----- Variables de control
-        self.miId=StringVar()
+        self.miId=StringVar()  
         self.miNick=StringVar()
         self.miPwd=StringVar()
         self.miTUser=StringVar()
@@ -20,16 +20,23 @@ class CrudPOO(Frame):
 
         #------------- barra de menu
 
-        self.barraMenu=Menu(raiz)
+        self.barraMenu=Menu(self.ventana)
         raiz.config(menu=self.barraMenu)
 
-        super().__init__(raiz)
+        super().__init__(self.ventana)
         self.master=raiz
         self.pack()
         
-        self.frameDatos=Frame(raiz)
+        self.frameDatos=Frame(self.ventana)
         self.frameDatos.pack()   
 
+        self.tabla=ttk.Treeview(height=20, columns=2, style="mystyle.Treeview")
+        self.tabla.grid(row=4, columnspan=2)
+        self.tabla.heading("#0", text="ID", anchor=CENTER)
+        self.tabla.heading("#1", text="Nombre", anchor=CENTER)
+        self.tabla.heading("#2", text="Contraseña", anchor=CENTER)
+        self.tabla.heading("#3", text="Tipo", anchor=CENTER)
+        
         self.crear_datos()
         self.crear_menu()
         
@@ -89,8 +96,6 @@ class CrudPOO(Frame):
         self.nickLabel=Label(self.frameDatos, text="Nick").grid(row=0, column=1, sticky="w", padx=10)
         self.contraseñaLabel=Label(self.frameDatos, text="Contraseña").grid(row=0, column=2, sticky="w", padx=10)
         self.tipoUserLabel=Label(self.frameDatos, text="Tipo usuario").grid(row=0, column=3, sticky="w", padx=10)
-        self.frameDatos.nombreLabel=Label(self.frameDatos, text="Nombre").grid(row=0, column=4, sticky="w", padx=10)
-        self.frameDatos.correoLabel=Label(self.frameDatos, text="Dirección electronica").grid(row=0, column=5, sticky="w", padx=10)
         conexion=conectarBBDD("localhost","app-vontade","root","")
 
         cursor=conexion.cursor()
@@ -104,8 +109,6 @@ class CrudPOO(Frame):
             Label(self.frameDatos, text=u[1]).grid(row=cont, column=1, sticky="w", padx=10)
             Label(self.frameDatos, text=u[2]).grid(row=cont, column=2, sticky="w", padx=10)
             Label(self.frameDatos, text=u[3]).grid(row=cont, column=3, sticky="w", padx=10)
-            Label(self.frameDatos, text=u[4]).grid(row=cont, column=4, sticky="w", padx=10)
-            Label(self.frameDatos, text=u[5]).grid(row=cont, column=5, sticky="w", padx=10)
             cont+=1
         Label(self.frameDatos).grid(row=cont,pady=1)
         cursor.close()
