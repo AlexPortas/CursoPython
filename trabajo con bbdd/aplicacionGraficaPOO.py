@@ -1,4 +1,5 @@
-from tkinter import Button, Entry, Frame, Label, Menu, StringVar, Tk
+from tkinter import *
+from tkinter import ttk
 from ConexionesBBDD import *
 from FuncionesCRUD import *
 
@@ -25,10 +26,10 @@ class CrudPOO(Frame):
 
         super().__init__(self.ventana)
         self.master=raiz
-        self.pack()
+        self.grid(row=0)
         
         self.frameDatos=Frame(self.ventana)
-        self.frameDatos.pack()   
+        self.frameDatos.grid(row=0, columns=8)   
 
         self.tabla=ttk.Treeview(height=20, columns=2, style="mystyle.Treeview")
         self.tabla.grid(row=4, columnspan=2)
