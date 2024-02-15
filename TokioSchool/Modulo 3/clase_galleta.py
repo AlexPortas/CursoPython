@@ -13,11 +13,16 @@ class Galleta():
             print("Soy una galleta chocolateada :-D")
         else:
             print("Soy una galleta sin chocolate :-(")
-            
+
 if __name__ == "__main__":
     g = Galleta("dulce","cuadrada",True)
     print("-------- g1 ----------")
     print(g.sabor, g.forma, g.chocolate)
+    g.tiene_chocolate()
     g2 = Galleta("salada")
     print("-------- g2 ----------")
+    print(g2.sabor, g2.forma, g2.chocolate)
+    g2.tiene_chocolate()
+    g2.chocolatear()
+    g2.tiene_chocolate()
     print(g2.sabor, g2.forma, g2.chocolate)
