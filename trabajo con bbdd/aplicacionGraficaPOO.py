@@ -9,7 +9,6 @@ class CrudPOO(Frame):
         self.ventana = raiz
         self.ventana.title("App Gestor de Usuarips de la aplicacióm")
         self.ventana.resizable(1,1)
-        self.ventana.wm_iconbitmap("recursos/logo.ico")
         
         # ----- Variables de control
         self.miId=StringVar()  
@@ -31,12 +30,12 @@ class CrudPOO(Frame):
         self.frameDatos=Frame(self.ventana)
         self.frameDatos.grid(row=0, columns=8)   
 
-        self.tabla=ttk.Treeview(height=20, columns=2, style="mystyle.Treeview")
+        self.tabla=ttk.Treeview(height=20, columns=("Nombre","Contraseña","Tipo"), style="mystyle.Treeview")
         self.tabla.grid(row=4, columnspan=2)
         self.tabla.heading("#0", text="ID", anchor=CENTER)
-        self.tabla.heading("#1", text="Nombre", anchor=CENTER)
-        self.tabla.heading("#2", text="Contraseña", anchor=CENTER)
-        self.tabla.heading("#3", text="Tipo", anchor=CENTER)
+        self.tabla.heading("Nombre", text="Nombre", anchor=CENTER)
+        self.tabla.heading("Contraseña", text="Contraseña", anchor=CENTER)
+        self.tabla.heading("Tipo", text="Tipo", anchor=CENTER)
         
         self.crear_datos()
         self.crear_menu()
