@@ -32,6 +32,10 @@ class CrudPOO(Frame):
 
         self.tabla=ttk.Treeview(height=20, columns=("Nombre","Contraseña","Tipo"), style="mystyle.Treeview")
         self.tabla.grid(row=4, columnspan=2)
+        self.tabla.column("#0", width=80, anchor=CENTER)
+        self.tabla.column("Nombre", width=80, anchor=CENTER)
+        self.tabla.column("Contraseña", width=80, anchor=CENTER)
+        self.tabla.column("Tipo", width=80, anchor=CENTER)
         self.tabla.heading("#0", text="ID", anchor=CENTER)
         self.tabla.heading("Nombre", text="Nombre", anchor=CENTER)
         self.tabla.heading("Contraseña", text="Contraseña", anchor=CENTER)
@@ -92,10 +96,6 @@ class CrudPOO(Frame):
             self.btnCrear=Button(self, text="Borrar usuario", command=self.borrarUser).grid(row=6, column=2)
 
     def crear_datos(self):
-        self.idLabel=Label(self.frameDatos, text="Id").grid(row=0, column=0, sticky="w", padx=10)
-        self.nickLabel=Label(self.frameDatos, text="Nick").grid(row=0, column=1, sticky="w", padx=10)
-        self.contraseñaLabel=Label(self.frameDatos, text="Contraseña").grid(row=0, column=2, sticky="w", padx=10)
-        self.tipoUserLabel=Label(self.frameDatos, text="Tipo usuario").grid(row=0, column=3, sticky="w", padx=10)
         conexion=conectarBBDD("localhost","app-vontade","root","")
 
         cursor=conexion.cursor()
@@ -105,14 +105,12 @@ class CrudPOO(Frame):
         users=cursor.fetchall()
         cont=1
         for u in users:
-            Label(self.frameDatos, text=u[0]).grid(row=cont, column=0, sticky="w", padx=10)
-            Label(self.frameDatos, text=u[1]).grid(row=cont, column=1, sticky="w", padx=10)
-            Label(self.frameDatos, text=u[2]).grid(row=cont, column=2, sticky="w", padx=10)
-            Label(self.frameDatos, text=u[3]).grid(row=cont, column=3, sticky="w", padx=10)
+            self.tabla.insert("",END,text=u[0], values=(u[1], u[2],u[3]))
             cont+=1
         Label(self.frameDatos).grid(row=cont,pady=1)
         cursor.close()
         conexion.close()
+
 
     def actualizarDatos(self):
         for widget in self.frameDatos.winfo_children():
