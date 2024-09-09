@@ -27,9 +27,9 @@ class CrudPOO(Frame):
         self.master=raiz
         self.grid(row=0)
         
-        self.frameDatos=Frame(self.ventana)
-        self.frameDatos.grid(row=0, columns=8)   
-
+        self.frameDatos=LabelFrame(self.ventana, text="Registrar nuevo usuario", font=('Calibri', 16, 'bold'))
+        self.frameDatos.grid(row=0, column=0, columnspan=4, pady=20)
+        self.crear_widgets(self.frameDatos )
         self.tabla=ttk.Treeview(height=20, columns=("Nombre","Contraseña","Tipo"), style="mystyle.Treeview")
         self.tabla.grid(row=4, columnspan=2)
         self.tabla.column("#0", width=80, anchor=CENTER)
@@ -49,7 +49,7 @@ class CrudPOO(Frame):
         self.datosMenu.add_command(label="Mostrar datos", command=self.actualizarDatos)
 
         self.borrarMenu=Menu(self.barraMenu, tearoff=0)
-        self.borrarMenu.add_command(label="Desseleccionar", command=self.limpiarCampos)
+        self.borrarMenu.add_command(label="Deseleccionar", command=self.limpiarCampos)
 
         self.crudMenu=Menu(self.barraMenu, tearoff=0)
         self.crudMenu.add_command(label="Crear usuario", command=lambda:self.crear_widgets(crear=True))
@@ -58,42 +58,23 @@ class CrudPOO(Frame):
         self.crudMenu.add_command(label="Eliminar usuario", command=lambda:self.crear_widgets(borrar=True))
 
         self.barraMenu.add_cascade(label="Refrescar", menu=self.datosMenu)
-        self.barraMenu.add_cascade(label="Desseleccionar usuario", menu=self.borrarMenu)
+        self.barraMenu.add_cascade(label="Deseleccionar usuario", menu=self.borrarMenu)
         self.barraMenu.add_cascade(label="Acciones", menu=self.crudMenu)
 
-    def crear_widgets(self, crear=False, mostrar=False, modificar=False, borrar=False):
-        self.borrar_widgets()
-        if not crear:
-            self.cuadroTextoId=Entry(self, textvariable=self.miId).grid(row=0, column=2, padx=5, pady=5)
-            self.idLabel=Label(self, text="Id: ").grid(row=0, column=1, sticky="w", padx=10)
+    def crear_widgets(self, frame):
+        self.cuadroTextoNick=ttk.Entry(frame, textvariable=self.miNick).grid(row=1, column=2, padx=5, pady=5)
+        self.nickLabel=ttk.Label(frame, text="Nick: ").grid(row=1, column=1, sticky="w", padx=10)
 
-        self.cuadroTextoNick=Entry(self, textvariable=self.miNick).grid(row=1, column=2, padx=5, pady=5)
-        self.nickLabel=Label(self, text="Nick: ").grid(row=1, column=1, sticky="w", padx=10)
+        self.cuadroTextoPwd=ttk.Entry(frame, textvariable=self.miPwd).grid(row=2, column=2, padx=5, pady=5)
+        self.contraseñaLabel=ttk.Label(frame, text="Contraseña: ").grid(row=2, column=1, sticky="w", padx=10)
 
-        self.cuadroTextoPwd=Entry(self, textvariable=self.miPwd).grid(row=2, column=2, padx=5, pady=5)
-        self.contraseñaLabel=Label(self, text="Contraseña: ").grid(row=2, column=1, sticky="w", padx=10)
+        self.cuadroTextoTUser=ttk.Entry(frame, textvariable=self.miTUser).grid(row=3, column=2, padx=5, pady=5)
+        self.tipoUserLabel=ttk.Label(frame, text="Tipo usuario: ").grid(row=3, column=1, sticky="w", padx=10)
 
-        self.cuadroTextoTUser=Entry(self, textvariable=self.miTUser).grid(row=3, column=2, padx=5, pady=5)
-        self.tipoUserLabel=Label(self, text="Tipo usuario: ").grid(row=3, column=1, sticky="w", padx=10)
-
-        self.cuadroTextoNombre=Entry(self, textvariable=self.miNombre).grid(row=4, column=2, padx=5, pady=5)
-        self.nombreLabel=Label(self, text="Nombre: ").grid(row=4, column=1, sticky="w", padx=10)
-
-        self.cuadroTextoCorreo=Entry(self, textvariable=self.miCorreo).grid(row=5, column=2, padx=5, pady=5)
-        self.correoLabel=Label(self, text="Dirección electronica: ").grid(row=5, column=1, sticky="w", padx=10)
-
-        if crear:
-            self.btnCrear=Button(self, text="Crear usuario", command=self.insertarUser).grid(row=6, column=2)
-
-        if mostrar:
-            self.leerUserPorID()
-            self.btnMostrar=Button(self, text="Mostrar otro usuario", command=self.leerUserPorID).grid(row=6, column=2)
-
-        if modificar:
-            self.btnCrear=Button(self, text="Modificar usuario", command=self.modificarUser).grid(row=6, column=2)
-
-        if borrar:
-            self.btnCrear=Button(self, text="Borrar usuario", command=self.borrarUser).grid(row=6, column=2)
+        s = ttk.Style()
+        s.configure("my.TButton", font=("Calibri", 14, "bold"))
+        self.btnGuardar=ttk.Button(frame, text="Crear usuario", style="my.TButton")
+        self.btnGuardar.grid(row=4, columnspan=2, sticky=W+E)
 
     def crear_datos(self):
         conexion=conectarBBDD("localhost","app-vontade","root","")
@@ -113,14 +94,9 @@ class CrudPOO(Frame):
 
 
     def actualizarDatos(self):
-        for widget in self.frameDatos.winfo_children():
-            widget.destroy()
+        for fila in self.tabla.get_children():
+            self.tabla.delete(fila)
         self.crear_datos()
-
-    def borrar_widgets(self):
-        for widget in self.winfo_children():
-            widget.destroy()
-        self.grid_forget()
 
     def limpiarCampos(self):
         self.miId.set("")

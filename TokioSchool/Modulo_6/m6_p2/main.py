@@ -78,7 +78,7 @@ class Producto():
 
     def validacion_nombre(self):
         nombre_introducido=self.nombre.get()
-        return len(nombre_introducido) != 0
+           return len(nombre_introducido) != 0
 
     def validacion_precio(self):
         precio_introducido=self.precio.get()
