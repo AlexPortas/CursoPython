@@ -15,8 +15,6 @@ class CrudPOO(Frame):
         self.miNick=StringVar()
         self.miPwd=StringVar()
         self.miTUser=StringVar()
-        self.miNombre=StringVar()
-        self.miCorreo=StringVar()
 
         #------------- barra de menu
 
@@ -30,6 +28,8 @@ class CrudPOO(Frame):
         self.frameDatos=LabelFrame(self.ventana, text="Registrar nuevo usuario", font=('Calibri', 16, 'bold'))
         self.frameDatos.grid(row=0, column=0, columnspan=4, pady=20)
         self.crear_widgets(self.frameDatos )
+        self.mensaje=Label(text="", fg="red", font=('Calibri', 13))
+        self.mensaje.grid(row=3, column=0, columnspan=2, sticky=W+E)
         self.tabla=ttk.Treeview(height=20, columns=("Nombre","Contraseña","Tipo"), style="mystyle.Treeview")
         self.tabla.grid(row=4, columnspan=2)
         self.tabla.column("#0", width=80, anchor=CENTER)
@@ -41,6 +41,16 @@ class CrudPOO(Frame):
         self.tabla.heading("Contraseña", text="Contraseña", anchor=CENTER)
         self.tabla.heading("Tipo", text="Tipo", anchor=CENTER)
         
+
+        #botones eliminar y editar
+        s=ttk.Style()
+        s.configure("my.TButton", font=("Calibri", 14, "bold"))
+
+        self.btnEliminar=ttk.Button(text="ELIMINAR", style="my.TButton", command=self.eliminar_producto)
+        self.btnEliminar.grid(row=5, column=0, sticky=W+E)
+        self.btnEditar=ttk.Button(text="EDITAR", style="my.TButton", command=self.editar_producto)
+        self.btnEditar.grid(row=5, column=1, sticky=W+E)
+
         self.crear_datos()
         self.crear_menu()
         
@@ -53,7 +63,6 @@ class CrudPOO(Frame):
 
         self.crudMenu=Menu(self.barraMenu, tearoff=0)
         self.crudMenu.add_command(label="Crear usuario", command=lambda:self.crear_widgets(crear=True))
-        self.crudMenu.add_command(label="Leer usuario por Id", command=lambda:self.crear_widgets(mostrar=True))
         self.crudMenu.add_command(label="Modificar usuario", command=lambda:self.crear_widgets(modificar=True))
         self.crudMenu.add_command(label="Eliminar usuario", command=lambda:self.crear_widgets(borrar=True))
 
@@ -93,7 +102,7 @@ class CrudPOO(Frame):
         conexion.close()
 
 
-    def actualizarDatos(self):
+    def actualizarTabla(self):
         for fila in self.tabla.get_children():
             self.tabla.delete(fila)
         self.crear_datos()
@@ -103,8 +112,116 @@ class CrudPOO(Frame):
         self.miNick.set("")
         self.miPwd.set("")
         self.miTUser.set("")
-        self.miNombre.set("")
-        self.miCorreo.set("")
+
+    def add_producto(self):
+        if self.validacion_nombre() and self.validacion_precio():
+            query="INSERT INTO producto VALUES (NULL,?,?)"
+            parametros=(self.nombre.get(), self.precio.get())
+            self.db_consulta(query,parametros)
+            self.mensaje["text"]="Producto {} añadido con éxito".format(self.nombre.get())
+            self.nombre.delete(0, END)
+            self.precio.delete(0, END)
+        else:
+            self.mensaje["text"]="Datos no introducidos correctamente"
+
+        self.actualizarTabla()
+
+    def eliminar_producto(self):
+        self.mensaje["text"]=""
+        #Comprobación de que se seleccione un producto para eliminarlo
+        try:
+            self.tabla.item(self.tabla.selection())["text"][0]
+        except IndexError as e:
+            self.mensaje["text"]= "Por favor, seleccio ne un producto"
+            return
+
+        self.mensaje["text"] = ""
+        nombre=self.tabla.item(self.tabla.selection())["text"]
+        query="DELETE FROM producto WHERE nombre=?"
+        self.db_consulta(query,(nombre, ))
+        self.mensaje["text"] = "Producto {} eliminado con éxito.".format(nombre)
+        self.get_productos()
+
+    def editar_producto(self):
+        self.mensaje["text"]=""
+        #Comprobación de que se seleccione un producto para editarlo
+        try:
+            self.tabla.item(self.tabla.selection())["text"][0]
+        except IndexError as e:
+            self.mensaje["text"]= "Por favor, seleccione un producto"
+            return
+        
+        old_nombre = self.tabla.item(self.tabla.selection())['text']
+        old_precio = self.tabla.item(self.tabla.selection())['values'][0]
+        print("old_nombre", self.tabla.item(self.tabla.selection())['text'],"old_precio" ,self.tabla.item(self.tabla.selection())['values'][0])
+        #Ventana nueva (editar producto
+        self.ventana_editar = Toplevel()  # Crear una ventana por delante de la principal
+        self.ventana_editar.title = "Editar Producto"  # Titulo de la ventana
+        self.ventana_editar.resizable(1, 1)
+        self.ventana_editar.wm_iconbitmap('recursos/logo.ico')
+        titulo = Label(self.ventana_editar, text='Edición de Productos', font=('Calibri', 50, 'bold'))
+        titulo.grid(column=0, row=0)
+        
+        # Creacion del contenedor Frame de la ventana de Editar Producto
+        frame_ep = LabelFrame(self.ventana_editar, text="Editar el siguiente Producto", font=('Calibri', 16, 'bold'))
+        frame_ep.grid(row=1, column=0, columnspan=20, pady=20)
+        
+        # Label Nombre antiguo
+        self.etiqueta_nombre_anituguo = Label(frame_ep, text = "Nombre antiguo: ", font=('Calibri', 13))
+        self.etiqueta_nombre_anituguo.grid(row=2, column=0)
+        # Entry Nombre antiguo (texto que no se podra modificar)
+        self.input_nombre_antiguo = Entry(frame_ep, textvariable=StringVar(self.ventana_editar, value=old_nombre), state='readonly', font=('Calibri', 13))
+        self.input_nombre_antiguo.grid(row=2, column=1)
+        # Label Nombre nuevo
+        self.etiqueta_nombre_nuevo = Label(frame_ep, text="Nombre nuevo: ", font=('Calibri', 13))
+        self.etiqueta_nombre_nuevo.grid(row=3, column=0)
+        # Entry Nombre nuevo (texto que si se podra modificar)
+        self.input_nombre_nuevo = ttk.Entry(frame_ep, font=('Calibri', 13))
+        self.input_nombre_nuevo.grid(row=3, column=1)
+        self.input_nombre_nuevo.focus() # Para que el foco del raton vaya a este Entry al inicio
+        # Label Precio antiguo
+        self.etiqueta_precio_anituguo = Label(frame_ep, text="Precio antiguo: ", font=('Calibri', 13))
+        self.etiqueta_precio_anituguo.grid(row=4, column=0)
+        # Entry Precio antiguo (texto que no se podra modificar)
+        self.input_precio_antiguo = Entry(frame_ep, textvariable=StringVar(self.ventana_editar, value=old_precio), state='readonly', font=('Calibri', 13))
+        self.input_precio_antiguo.grid(row=4, column=1)
+        # Label Precio nuevo
+        self.etiqueta_precio_nuevo = Label(frame_ep, text="Precio nuevo: ", font=('Calibri', 13))
+        self.etiqueta_precio_nuevo.grid(row=5, column=0)
+        # Entry Precio nuevo (texto que si se podra modificar)
+        self.input_precio_nuevo = ttk.Entry(frame_ep, font=('Calibri', 13))
+        self.input_precio_nuevo.grid(row=5, column=1)
+        
+        # Boton Actualizar Producto
+        s = ttk.Style()
+        s.configure("my.TButton", font=("Calibri", 14, "bold"))
+        self.boton_actualizar = ttk.Button(frame_ep, text="Actualizar Producto", style="my.TButton", command=lambda: self.actualizar_productos(self.input_nombre_nuevo.get(), self.input_nombre_antiguo.get(), self.input_precio_nuevo.get(), self.input_precio_antiguo.get()))
+        self.boton_actualizar.grid(row=6, columnspan=2, sticky=W + E)
+
+    def actualizar_productos(self, nuevo_nombre, antiguo_nombre, nuevo_precio, antiguo_precio):
+        producto_modificado = False
+        query = 'UPDATE producto SET nombre = ?, precio = ? WHERE nombre = ? AND precio = ?'
+        if nuevo_nombre != '' and nuevo_precio != '':
+            # Si el usuario escribe nuevo nombre y nuevo precio, se cambian ambos
+            parametros = (nuevo_nombre, nuevo_precio, antiguo_nombre, antiguo_precio)
+            producto_modificado = True
+        elif nuevo_nombre != '' and nuevo_precio == '':
+            # Si el usuario deja vacio el nuevo precio, se mantiene el pecio anterior p
+            parametros = (nuevo_nombre, antiguo_precio, antiguo_nombre, antiguo_precio)
+            producto_modificado = True
+        elif nuevo_nombre == '' and nuevo_precio != '':
+            # Si el usuario deja vacio el nuevo nombre, se mantiene el nombre anterior
+            parametros = (antiguo_nombre, nuevo_precio, antiguo_nombre, antiguo_precio)
+            producto_modificado = True
+
+        if(producto_modificado):
+            self.db_consulta(query, parametros)
+            self.ventana_editar.destroy() # Cerrar la ventana de edicion de productos
+            self.mensaje['text'] = 'El producto {} ha sido actualizado con éxito'.format(antiguo_nombre) # Mostrar mensaje para el usuario
+            self.get_productos() # Actualizar la tabla de productos
+        else:
+            self.ventana_editar.destroy() # Cerrar la ventana de edicion de productos
+            self.mensaje['text'] = 'El producto {} NO ha sido actualizado'.format(antiguo_nombre) # Mostrar mensaje para el usuario
 
 
 root=Tk()
