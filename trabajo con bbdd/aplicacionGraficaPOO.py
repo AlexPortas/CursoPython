@@ -46,9 +46,9 @@ class CrudPOO(Frame):
         s=ttk.Style()
         s.configure("my.TButton", font=("Calibri", 14, "bold"))
 
-        self.btnEliminar=ttk.Button(text="ELIMINAR", style="my.TButton", command=self.eliminar_producto)
+        self.btnEliminar=ttk.Button(text="ELIMINAR", style="my.TButton", command=self.eliminar_usuario)
         self.btnEliminar.grid(row=5, column=0, sticky=W+E)
-        self.btnEditar=ttk.Button(text="EDITAR", style="my.TButton", command=self.editar_producto)
+        self.btnEditar=ttk.Button(text="EDITAR", style="my.TButton", command=self.editar_usuario)
         self.btnEditar.grid(row=5, column=1, sticky=W+E)
 
         self.crear_datos()
@@ -56,7 +56,7 @@ class CrudPOO(Frame):
         
     def crear_menu(self):
         self.datosMenu=Menu(self.barraMenu, tearoff=0)
-        self.datosMenu.add_command(label="Mostrar datos", command=self.actualizarDatos)
+        self.datosMenu.add_command(label="Mostrar datos", command=self.actualizarTabla)
 
         self.borrarMenu=Menu(self.barraMenu, tearoff=0)
         self.borrarMenu.add_command(label="Deseleccionar", command=self.limpiarCampos)
@@ -83,7 +83,7 @@ class CrudPOO(Frame):
         s = ttk.Style()
         s.configure("my.TButton", font=("Calibri", 14, "bold"))
         self.btnGuardar=ttk.Button(frame, text="Crear usuario", style="my.TButton")
-        self.btnGuardar.grid(row=4, columnspan=2, sticky=W+E)
+        self.btnGuardar.grid(row=4, column=1, columnspan=2, sticky=W+E)
 
     def crear_datos(self):
         conexion=conectarBBDD("localhost","app-vontade","root","")
@@ -126,7 +126,7 @@ class CrudPOO(Frame):
 
         self.actualizarTabla()
 
-    def eliminar_producto(self):
+    def eliminar_usuario(self):
         self.mensaje["text"]=""
         #Comprobación de que se seleccione un producto para eliminarlo
         try:
@@ -142,7 +142,7 @@ class CrudPOO(Frame):
         self.mensaje["text"] = "Producto {} eliminado con éxito.".format(nombre)
         self.get_productos()
 
-    def editar_producto(self):
+    def editar_usuario(self):
         self.mensaje["text"]=""
         #Comprobación de que se seleccione un producto para editarlo
         try:
@@ -198,7 +198,7 @@ class CrudPOO(Frame):
         self.boton_actualizar = ttk.Button(frame_ep, text="Actualizar Producto", style="my.TButton", command=lambda: self.actualizar_productos(self.input_nombre_nuevo.get(), self.input_nombre_antiguo.get(), self.input_precio_nuevo.get(), self.input_precio_antiguo.get()))
         self.boton_actualizar.grid(row=6, columnspan=2, sticky=W + E)
 
-    def actualizar_productos(self, nuevo_nombre, antiguo_nombre, nuevo_precio, antiguo_precio):
+    def actualizar_usuario(self, nuevo_nombre, antiguo_nombre, nuevo_precio, antiguo_precio):
         producto_modificado = False
         query = 'UPDATE producto SET nombre = ?, precio = ? WHERE nombre = ? AND precio = ?'
         if nuevo_nombre != '' and nuevo_precio != '':
