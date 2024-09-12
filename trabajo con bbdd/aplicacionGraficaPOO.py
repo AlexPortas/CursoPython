@@ -28,8 +28,6 @@ class CrudPOO(Frame):
         self.frameDatos=LabelFrame(self.ventana, text="Registrar nuevo usuario", font=('Calibri', 16, 'bold'))
         self.frameDatos.grid(row=0, column=0, columnspan=4, pady=20)
         self.crear_widgets(self.frameDatos )
-        self.mensaje=Label(text="", fg="red", font=('Calibri', 13))
-        self.mensaje.grid(row=3, column=0, columnspan=2, sticky=W+E)
         self.tabla=ttk.Treeview(height=20, columns=("Nombre","Contraseña","Tipo"), style="mystyle.Treeview")
         self.tabla.grid(row=4, columnspan=2)
         self.tabla.column("#0", width=80, anchor=CENTER)
@@ -46,9 +44,9 @@ class CrudPOO(Frame):
         s=ttk.Style()
         s.configure("my.TButton", font=("Calibri", 14, "bold"))
 
-        self.btnEliminar=ttk.Button(text="ELIMINAR", style="my.TButton", command=self.eliminar_usuario)
+        self.btnEliminar=ttk.Button(text="ELIMINAR", style="my.TButton")#, command=self.eliminar_usuario)
         self.btnEliminar.grid(row=5, column=0, sticky=W+E)
-        self.btnEditar=ttk.Button(text="EDITAR", style="my.TButton", command=self.editar_usuario)
+        self.btnEditar=ttk.Button(text="EDITAR", style="my.TButton")#, command=self.editar_usuario)
         self.btnEditar.grid(row=5, column=1, sticky=W+E)
 
         self.crear_datos()
@@ -82,7 +80,7 @@ class CrudPOO(Frame):
 
         s = ttk.Style()
         s.configure("my.TButton", font=("Calibri", 14, "bold"))
-        self.btnGuardar=ttk.Button(frame, text="Crear usuario", style="my.TButton")
+        self.btnGuardar=ttk.Button(frame, text="Crear usuario", style="my.TButton", command=self.add_usuario)
         self.btnGuardar.grid(row=4, column=1, columnspan=2, sticky=W+E)
 
     def crear_datos(self):
@@ -93,11 +91,8 @@ class CrudPOO(Frame):
         cursor.execute("SELECT * FROM USERS_APLICACION")
 
         users=cursor.fetchall()
-        cont=1
         for u in users:
             self.tabla.insert("",END,text=u[0], values=(u[1], u[2],u[3]))
-            cont+=1
-        Label(self.frameDatos).grid(row=cont,pady=1)
         cursor.close()
         conexion.close()
 
@@ -113,16 +108,18 @@ class CrudPOO(Frame):
         self.miPwd.set("")
         self.miTUser.set("")
 
-    def add_producto(self):
-        if self.validacion_nombre() and self.validacion_precio():
-            query="INSERT INTO producto VALUES (NULL,?,?)"
-            parametros=(self.nombre.get(), self.precio.get())
-            self.db_consulta(query,parametros)
-            self.mensaje["text"]="Producto {} añadido con éxito".format(self.nombre.get())
-            self.nombre.delete(0, END)
-            self.precio.delete(0, END)
-        else:
-            self.mensaje["text"]="Datos no introducidos correctamente"
+    def add_usuario(self):
+        conexion=conectarBBDD("localhost","app-vontade","root","")
+
+        cursor=conexion.cursor()
+
+        cursor.execute("INSERT INTO USERS_APLICACION VALUES (NULL,'"+self.miNick.get()+"','"+self.miPwd.get()+"','"+self.miTUser.get()+"')")
+        conexion.commit()
+        messagebox.showinfo("Nuevo usuario", "Has introducido un usuario")
+        cursor.close()
+        conexion.close()
+            
+        self.limpiarCampos()
 
         self.actualizarTabla()
 
