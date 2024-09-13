@@ -11,7 +11,6 @@ class CrudPOO(Frame):
         self.ventana.resizable(1,1)
         
         # ----- Variables de control
-        self.miId=StringVar()  
         self.miNick=StringVar()
         self.miPwd=StringVar()
         self.miTUser=StringVar()
@@ -27,7 +26,7 @@ class CrudPOO(Frame):
         
         self.frameDatos=LabelFrame(self.ventana, text="Registrar nuevo usuario", font=('Calibri', 16, 'bold'))
         self.frameDatos.grid(row=0, column=0, columnspan=4, pady=20)
-        self.crear_widgets(self.frameDatos )
+        self.crear_widgets(self.frameDatos, 1)
         self.tabla=ttk.Treeview(height=20, columns=("Nombre","Contraseña","Tipo"), style="mystyle.Treeview")
         self.tabla.grid(row=4, columnspan=2)
         self.tabla.column("#0", width=80, anchor=CENTER)
@@ -46,7 +45,7 @@ class CrudPOO(Frame):
 
         self.btnEliminar=ttk.Button(text="ELIMINAR", style="my.TButton")#, command=self.eliminar_usuario)
         self.btnEliminar.grid(row=5, column=0, sticky=W+E)
-        self.btnEditar=ttk.Button(text="EDITAR", style="my.TButton")#, command=self.editar_usuario)
+        self.btnEditar=ttk.Button(text="EDITAR", style="my.TButton", command=self.editar_usuario)
         self.btnEditar.grid(row=5, column=1, sticky=W+E)
 
         self.crear_datos()
@@ -68,20 +67,41 @@ class CrudPOO(Frame):
         self.barraMenu.add_cascade(label="Deseleccionar usuario", menu=self.borrarMenu)
         self.barraMenu.add_cascade(label="Acciones", menu=self.crudMenu)
 
-    def crear_widgets(self, frame):
-        self.cuadroTextoNick=ttk.Entry(frame, textvariable=self.miNick).grid(row=1, column=2, padx=5, pady=5)
-        self.nickLabel=ttk.Label(frame, text="Nick: ").grid(row=1, column=1, sticky="w", padx=10)
+    def crear_widgets(self, frame, opcion):
+        if opcion==1:
+            self.cuadroTextoNick=ttk.Entry(frame, textvariable=self.miNick).grid(row=1, column=2, padx=5, pady=5)
+            self.nickLabel=ttk.Label(frame, text="Nick: ").grid(row=1, column=1, sticky="w", padx=10)
 
-        self.cuadroTextoPwd=ttk.Entry(frame, textvariable=self.miPwd).grid(row=2, column=2, padx=5, pady=5)
-        self.contraseñaLabel=ttk.Label(frame, text="Contraseña: ").grid(row=2, column=1, sticky="w", padx=10)
+            self.cuadroTextoPwd=ttk.Entry(frame, textvariable=self.miPwd).grid(row=2, column=2, padx=5, pady=5)
+            self.contraseñaLabel=ttk.Label(frame, text="Contraseña: ").grid(row=2, column=1, sticky="w", padx=10)
 
-        self.cuadroTextoTUser=ttk.Entry(frame, textvariable=self.miTUser).grid(row=3, column=2, padx=5, pady=5)
-        self.tipoUserLabel=ttk.Label(frame, text="Tipo usuario: ").grid(row=3, column=1, sticky="w", padx=10)
+            self.cuadroTextoTUser=ttk.Entry(frame, textvariable=self.miTUser).grid(row=3, column=2, padx=5, pady=5)
+            self.tipoUserLabel=ttk.Label(frame, text="Tipo usuario: ").grid(row=3, column=1, sticky="w", padx=10)
 
-        s = ttk.Style()
-        s.configure("my.TButton", font=("Calibri", 14, "bold"))
-        self.btnGuardar=ttk.Button(frame, text="Crear usuario", style="my.TButton", command=self.add_usuario)
-        self.btnGuardar.grid(row=4, column=1, columnspan=2, sticky=W+E)
+            s = ttk.Style()
+            s.configure("my.TButton", font=("Calibri", 14, "bold"))
+            self.btnGuardar=ttk.Button(frame, text="Crear usuario", style="my.TButton", command=self.add_usuario)
+            self.btnGuardar.grid(row=4, column=1, columnspan=2, sticky=W+E)
+
+        if opcion==2:
+            self.etiqueta_nick_anituguo = ttk.Label(frame, text = "Nick antiguo: ", font=('Calibri', 13)).grid(row=2, column=0)
+            self.input_nick_antiguo = ttk.Entry(frame, textvariable=StringVar(self.ventana_editar, value=old_nick), state='readonly', font=('Calibri', 13)).grid(row=2, column=1)
+            
+            self.etiqueta_nick_nuevo = ttk.Label(frame, text="Nombre nuevo: ", font=('Calibri', 13)).grid(row=3, column=0)
+            # Entry Nombre nuevo (texto que si se podra modificar)
+            self.input_nick_nuevo = ttk.Entry(frame, font=('Calibri', 13)).grid(row=3, column=1)
+            # Label Precio antiguo
+            self.etiqueta_precio_anituguo = Label(frame, text="Precio antiguo: ", font=('Calibri', 13))
+            self.etiqueta_precio_anituguo.grid(row=4, column=0)
+            self.input_precio_antiguo = Entry(frame, textvariable=StringVar(self.ventana_editar, value=old_pwd), state='readonly', font=('Calibri', 13)).grid(row=4, column=1)
+            # Label Precio nuevo
+            self.etiqueta_precio_nuevo = ttk.Label(frame, text="Precio nuevo: ", font=('Calibri', 13)).grid(row=5, column=0)
+            self.input_precio_nuevo = ttk.Entry(frame, font=('Calibri', 13)).grid(row=5, column=1)
+            
+            # Boton Actualizar Producto
+            s = ttk.Style()
+            s.configure("my.TButton", font=("Calibri", 14, "bold"))
+            self.boton_actualizar = ttk.Button(frame, text="Actualizar", style="my.TButton", command=lambda: self.actualizar_usuario(self.input_nick_nuevo.get(), self.input_nick_antiguo.get(), self.input_precio_nuevo.get(), self.input_precio_antiguo.get())).grid(row=6, columnspan=2, sticky=W + E)
 
     def crear_datos(self):
         conexion=conectarBBDD("localhost","app-vontade","root","")
@@ -110,17 +130,13 @@ class CrudPOO(Frame):
 
     def add_usuario(self):
         conexion=conectarBBDD("localhost","app-vontade","root","")
-
         cursor=conexion.cursor()
-
         cursor.execute("INSERT INTO USERS_APLICACION VALUES (NULL,'"+self.miNick.get()+"','"+self.miPwd.get()+"','"+self.miTUser.get()+"')")
         conexion.commit()
         messagebox.showinfo("Nuevo usuario", "Has introducido un usuario")
         cursor.close()
         conexion.close()
-            
         self.limpiarCampos()
-
         self.actualizarTabla()
 
     def eliminar_usuario(self):
@@ -140,62 +156,40 @@ class CrudPOO(Frame):
         self.get_productos()
 
     def editar_usuario(self):
-        self.mensaje["text"]=""
         #Comprobación de que se seleccione un producto para editarlo
         try:
-            self.tabla.item(self.tabla.selection())["text"][0]
+            self.tabla.item(self.tabla.selection())["text"]
         except IndexError as e:
-            self.mensaje["text"]= "Por favor, seleccione un producto"
+            messagebox.showerror("Sin datos", "Por favor, seleccione un usuario")
             return
         
-        old_nombre = self.tabla.item(self.tabla.selection())['text']
-        old_precio = self.tabla.item(self.tabla.selection())['values'][0]
-        print("old_nombre", self.tabla.item(self.tabla.selection())['text'],"old_precio" ,self.tabla.item(self.tabla.selection())['values'][0])
-        #Ventana nueva (editar producto
+        old_id = self.tabla.item(self.tabla.selection())['text']
+        old_nick = self.tabla.item(self.tabla.selection())['values'][0]
+        old_pwd = self.tabla.item(self.tabla.selection())['values'][1]
+        old_tuser = self.tabla.item(self.tabla.selection())['values'][2]
+      
+        #Ventana nueva (editar usuario
         self.ventana_editar = Toplevel()  # Crear una ventana por delante de la principal
-        self.ventana_editar.title = "Editar Producto"  # Titulo de la ventana
+        self.ventana_editar.title = "Editar Usuario"  # Titulo de la ventana
         self.ventana_editar.resizable(1, 1)
-        self.ventana_editar.wm_iconbitmap('recursos/logo.ico')
-        titulo = Label(self.ventana_editar, text='Edición de Productos', font=('Calibri', 50, 'bold'))
+        titulo = Label(self.ventana_editar, text='Edición de Usuario', font=('Calibri', 50, 'bold'))
         titulo.grid(column=0, row=0)
         
-        # Creacion del contenedor Frame de la ventana de Editar Producto
-        frame_ep = LabelFrame(self.ventana_editar, text="Editar el siguiente Producto", font=('Calibri', 16, 'bold'))
-        frame_ep.grid(row=1, column=0, columnspan=20, pady=20)
+        # Creacon del contenedor Frame de la ventana de Editar
+        self.frame_editar = LabelFrame(self.ventana_editar, text="Editar el siguiente Producto", font=('Calibri', 16, 'bold')).grid(row=1, column=0, columnspan=20, pady=20)
         
-        # Label Nombre antiguo
-        self.etiqueta_nombre_anituguo = Label(frame_ep, text = "Nombre antiguo: ", font=('Calibri', 13))
-        self.etiqueta_nombre_anituguo.grid(row=2, column=0)
-        # Entry Nombre antiguo (texto que no se podra modificar)
-        self.input_nombre_antiguo = Entry(frame_ep, textvariable=StringVar(self.ventana_editar, value=old_nombre), state='readonly', font=('Calibri', 13))
-        self.input_nombre_antiguo.grid(row=2, column=1)
-        # Label Nombre nuevo
-        self.etiqueta_nombre_nuevo = Label(frame_ep, text="Nombre nuevo: ", font=('Calibri', 13))
-        self.etiqueta_nombre_nuevo.grid(row=3, column=0)
-        # Entry Nombre nuevo (texto que si se podra modificar)
-        self.input_nombre_nuevo = ttk.Entry(frame_ep, font=('Calibri', 13))
-        self.input_nombre_nuevo.grid(row=3, column=1)
-        self.input_nombre_nuevo.focus() # Para que el foco del raton vaya a este Entry al inicio
-        # Label Precio antiguo
-        self.etiqueta_precio_anituguo = Label(frame_ep, text="Precio antiguo: ", font=('Calibri', 13))
-        self.etiqueta_precio_anituguo.grid(row=4, column=0)
-        # Entry Precio antiguo (texto que no se podra modificar)
-        self.input_precio_antiguo = Entry(frame_ep, textvariable=StringVar(self.ventana_editar, value=old_precio), state='readonly', font=('Calibri', 13))
-        self.input_precio_antiguo.grid(row=4, column=1)
-        # Label Precio nuevo
-        self.etiqueta_precio_nuevo = Label(frame_ep, text="Precio nuevo: ", font=('Calibri', 13))
-        self.etiqueta_precio_nuevo.grid(row=5, column=0)
-        # Entry Precio nuevo (texto que si se podra modificar)
-        self.input_precio_nuevo = ttk.Entry(frame_ep, font=('Calibri', 13))
-        self.input_precio_nuevo.grid(row=5, column=1)
-        
-        # Boton Actualizar Producto
-        s = ttk.Style()
-        s.configure("my.TButton", font=("Calibri", 14, "bold"))
-        self.boton_actualizar = ttk.Button(frame_ep, text="Actualizar Producto", style="my.TButton", command=lambda: self.actualizar_productos(self.input_nombre_nuevo.get(), self.input_nombre_antiguo.get(), self.input_precio_nuevo.get(), self.input_precio_antiguo.get()))
-        self.boton_actualizar.grid(row=6, columnspan=2, sticky=W + E)
+        self.crear_widgets(self.frame_editar, 2)
 
     def actualizar_usuario(self, nuevo_nombre, antiguo_nombre, nuevo_precio, antiguo_precio):
+        conexion=conectarBBDD("localhost","app-vontade","root","")
+        cursor=conexion.cursor()
+        cursor.execute("INSERT INTO USERS_APLICACION VALUES (NULL,'"+self.miNick.get()+"','"+self.miPwd.get()+"','"+self.miTUser.get()+"')")
+        conexion.commit()
+        messagebox.showinfo("Nuevo usuario", "Has introducido un usuario")
+        cursor.close()
+        conexion.close()
+        self.limpiarCampos()
+        self.actualizarTabla()
         producto_modificado = False
         query = 'UPDATE producto SET nombre = ?, precio = ? WHERE nombre = ? AND precio = ?'
         if nuevo_nombre != '' and nuevo_precio != '':
