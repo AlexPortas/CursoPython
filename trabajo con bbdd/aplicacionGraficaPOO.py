@@ -47,7 +47,7 @@ class CrudPOO(Frame):
         s=ttk.Style()
         s.configure("my.TButton", font=("Calibri", 14, "bold"))
 
-        self.btnEliminar=ttk.Button(text="ELIMINAR", style="my.TButton")#, command=self.eliminar_usuario)
+        self.btnEliminar=ttk.Button(text="ELIMINAR", style="my.TButton", command=self.eliminar_usuario)
         self.btnEliminar.grid(row=5, column=0, sticky=W+E)
         self.btnEditar=ttk.Button(text="EDITAR", style="my.TButton", command=self.editar_usuario)
         self.btnEditar.grid(row=5, column=1, sticky=W+E)
@@ -118,6 +118,8 @@ class CrudPOO(Frame):
         conexion=conectarBBDD("localhost","app-vontade","root","")
         cursor=conexion.cursor()
         cursor.execute("INSERT INTO USERS_APLICACION VALUES (NULL,'"+self.miNick.get()+"','"+self.miPwd.get()+"','"+self.miTUser.get()+"')")
+        datos=self.miNick.get(),self.miPwd.get(),self.miTUser.get()
+        #cursor.execute("INSERT INTO USERS_APLICACION VALUES (NULL,?,?,?)",(datos))
         conexion.commit()
         messagebox.showinfo("Nuevo usuario", "Has introducido un usuario")
         cursor.close()
@@ -126,20 +128,24 @@ class CrudPOO(Frame):
         self.actualizarTabla()
 
     def eliminar_usuario(self):
-        self.mensaje["text"]=""
         #Comprobación de que se seleccione un producto para eliminarlo
         try:
-            self.tabla.item(self.tabla.selection())["text"][0]
+            self.tabla.item(self.tabla.selection())["text"]
         except IndexError as e:
-            self.mensaje["text"]= "Por favor, seleccio ne un producto"
+            messagebox.showerror("Sin datos", "Por favor, seleccione un usuario")
             return
 
-        self.mensaje["text"] = ""
-        nombre=self.tabla.item(self.tabla.selection())["text"]
-        query="DELETE FROM producto WHERE nombre=?"
-        self.db_consulta(query,(nombre, ))
-        self.mensaje["text"] = "Producto {} eliminado con éxito.".format(nombre)
-        self.get_productos()
+        self.old_id.set(self.tabla.item(self.tabla.selection())['text'])
+        
+        conexion=conectarBBDD("localhost","app-vontade","root","")
+        cursor=conexion.cursor()
+        cursor.execute("DELETE FROM USERS_APLICACION WHERE ID='"+self.old_id.get()+"'")
+        conexion.commit()
+        messagebox.showinfo("Eliminar usuario", "Has eliminado un usuario")
+        cursor.close()
+        conexion.close()
+        self.limpiarCampos()
+        self.actualizarTabla()
 
     def editar_usuario(self):
         #Comprobación de que se seleccione un producto para editarlo
@@ -153,7 +159,6 @@ class CrudPOO(Frame):
         self.old_nick.set(self.tabla.item(self.tabla.selection())['values'][0])
         self.old_pwd.set(self.tabla.item(self.tabla.selection())['values'][1])
         self.old_tuser.set(self.tabla.item(self.tabla.selection())['values'][2])
-        print(self.tabla.item(self.tabla.selection())['values'],self.old_nick)
         #Ventana nueva (editar usuario
         self.ventana_editar = Toplevel()  # Crear una ventana por delante de la principal
         self.ventana_editar.title = "Editar Usuario"  # Titulo de la ventana
@@ -189,10 +194,8 @@ class CrudPOO(Frame):
         self.boton_actualizar = ttk.Button(self.ventana_editar, text="Actualizar", style="my.TButton", command=lambda: self.actualizar_usuario(self.input_nick_nuevo.get(), self.input_pwd_nuevo.get(), self.input_tuser_nuevo.get(), self.old_id.get())).grid(row=8, columnspan=2, sticky=W + E)
 
     def actualizar_usuario(self, nick, pwd, tuser, id):
-        print(nick,pwd,tuser,id)
         conexion=conectarBBDD("localhost","app-vontade","root","")
         cursor=conexion.cursor()
-        print("UPDATE USERS_APLICACION SET nick='"+nick+"', pwd='"+pwd+"',tipo='"+tuser+"' WHERE ID='"+id+"'")
         cursor.execute("UPDATE USERS_APLICACION SET nick='"+nick+"', pwd='"+pwd+"',tipo='"+tuser+"' WHERE ID='"+id+"'")
         conexion.commit()
         messagebox.showinfo("Actualizastes usuario", "Has actualizado un usuario")
