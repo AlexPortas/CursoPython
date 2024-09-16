@@ -117,9 +117,9 @@ class CrudPOO(Frame):
     def add_usuario(self):
         conexion=conectarBBDD("localhost","app-vontade","root","")
         cursor=conexion.cursor()
-        cursor.execute("INSERT INTO USERS_APLICACION VALUES (NULL,'"+self.miNick.get()+"','"+self.miPwd.get()+"','"+self.miTUser.get()+"')")
-        datos=self.miNick.get(),self.miPwd.get(),self.miTUser.get()
-        #cursor.execute("INSERT INTO USERS_APLICACION VALUES (NULL,?,?,?)",(datos))
+        #cursor.execute("INSERT INTO USERS_APLICACION VALUES (NULL,'"+self.miNick.get()+"','"+self.miPwd.get()+"','"+self.miTUser.get()+"')")
+        datos=(self.miNick.get(),self.miPwd.get(),self.miTUser.get())
+        cursor.execute("INSERT INTO USERS_APLICACION VALUES (NULL,?,?,?)", datos)
         conexion.commit()
         messagebox.showinfo("Nuevo usuario", "Has introducido un usuario")
         cursor.close()
@@ -196,7 +196,9 @@ class CrudPOO(Frame):
     def actualizar_usuario(self, nick, pwd, tuser, id):
         conexion=conectarBBDD("localhost","app-vontade","root","")
         cursor=conexion.cursor()
-        cursor.execute("UPDATE USERS_APLICACION SET nick='"+nick+"', pwd='"+pwd+"',tipo='"+tuser+"' WHERE ID='"+id+"'")
+       # cursor.execute("UPDATE USERS_APLICACION SET nick='"+nick+"', pwd='"+pwd+"',tipo='"+tuser+"' WHERE ID='"+id+"'")
+        datos=nick, pwd, tuser, id
+        cursor.execute("UPDATE USERS_APLICACION SET nick=?, pwd=?,tipo=? WHERE ID=?",(datos))
         conexion.commit()
         messagebox.showinfo("Actualizastes usuario", "Has actualizado un usuario")
         cursor.close()
