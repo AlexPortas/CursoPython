@@ -118,7 +118,7 @@ class CrudPOO(Frame):
         conexion=conectarBBDD("localhost","app-vontade","root","")
         cursor=conexion.cursor()
         #cursor.execute("INSERT INTO USERS_APLICACION VALUES (NULL,'"+self.miNick.get()+"','"+self.miPwd.get()+"','"+self.miTUser.get()+"')")
-        datos=(self.miNick.get(),self.miPwd.get(),self.miTUser.get())
+        datos=self.miNick.get(),self.miPwd.get(),self.miTUser.get()
         cursor.execute("INSERT INTO USERS_APLICACION VALUES (NULL,?,?,?)", datos)
         conexion.commit()
         messagebox.showinfo("Nuevo usuario", "Has introducido un usuario")
@@ -161,7 +161,7 @@ class CrudPOO(Frame):
         self.old_tuser.set(self.tabla.item(self.tabla.selection())['values'][2])
         #Ventana nueva (editar usuario
         self.ventana_editar = Toplevel()  # Crear una ventana por delante de la principal
-        self.ventana_editar.title = "Editar Usuario"  # Titulo de la ventana
+        self.ventana_editar.title("Editar Usuario")  # Titulo de la ventana
         self.ventana_editar.resizable(1, 1)
 
         titulo = Label(self.ventana_editar, text='Edición de Usuario', font=('Calibri', 50, 'bold'))
@@ -198,7 +198,7 @@ class CrudPOO(Frame):
         cursor=conexion.cursor()
        # cursor.execute("UPDATE USERS_APLICACION SET nick='"+nick+"', pwd='"+pwd+"',tipo='"+tuser+"' WHERE ID='"+id+"'")
         datos=nick, pwd, tuser, id
-        cursor.execute("UPDATE USERS_APLICACION SET nick=?, pwd=?,tipo=? WHERE ID=?",(datos))
+        cursor.execute("UPDATE USERS_APLICACION SET nick=?, pwd=?,tipo=? WHERE ID=?",datos)
         conexion.commit()
         messagebox.showinfo("Actualizastes usuario", "Has actualizado un usuario")
         cursor.close()
