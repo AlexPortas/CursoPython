@@ -136,7 +136,44 @@ class CrudPOO(Frame):
             return
 
         self.old_id.set(self.tabla.item(self.tabla.selection())['text'])
+        self.miNick.set(self.tabla.item(self.tabla.selection())['values'][0])
+        self.miPwd.set(self.tabla.item(self.tabla.selection())['values'][1])
+        self.miTUser.set(self.tabla.item(self.tabla.selection())['values'][2])
+        #Ventana nueva (editar usuario
+        self.ventana_editar = Toplevel()  # Crear una ventana por delante de la principal
+        self.ventana_editar.title("Editar Usuario")  # Titulo de la ventana
+        self.ventana_editar.resizable(1, 1)
+
+        titulo = Label(self.ventana_editar, text='Edición de Usuario', font=('Calibri', 50, 'bold'))
+        titulo.grid(column=0, row=0, columnspan=2)
+
+        self.etiqueta_nick_anituguo = ttk.Label(self.ventana_editar, text = "Nick antiguo: ", font=('Calibri', 13)).grid(row=2, column=0)
+        self.input_nick_antiguo = ttk.Entry(self.ventana_editar, textvariable=self.old_nick, state='readonly', font=('Calibri', 13)).grid(row=2, column=1)
         
+        self.etiqueta_nick_nuevo = ttk.Label(self.ventana_editar, text="Nick nuevo: ", font=('Calibri', 13)).grid(row=3, column=0)
+        self.input_nick_nuevo = ttk.Entry(self.ventana_editar, font=('Calibri', 13))
+        self.input_nick_nuevo.grid(row=3, column=1)
+        
+        self.etiqueta_pwd_anituguo = ttk.Label(self.ventana_editar, text="Contraseña antiguo: ", font=('Calibri', 13)).grid(row=4, column=0)
+        self.input_pwd_antiguo = ttk.Entry(self.ventana_editar, textvariable=self.old_pwd, state='readonly', font=('Calibri', 13)).grid(row=4, column=1)
+        
+        self.etiqueta_pwd_nuevo = ttk.Label(self.ventana_editar, text="Contraseña nuevo: ", font=('Calibri', 13)).grid(row=5, column=0)
+        self.input_pwd_nuevo = ttk.Entry(self.ventana_editar, font=('Calibri', 13))
+        self.input_pwd_nuevo.grid(row=5, column=1)
+        
+        self.etiqueta_tuser_anituguo = ttk.Label(self.ventana_editar, text="Tipo antiguo: ", font=('Calibri', 13)).grid(row=6, column=0)
+        self.input_tuser_antiguo = ttk.Entry(self.ventana_editar, textvariable=self.old_tuser, state='readonly', font=('Calibri', 13)).grid(row=6, column=1)
+        
+        self.etiqueta_tuser_nuevo = ttk.Label(self.ventana_editar, text="Tipo nuevo: ", font=('Calibri', 13)).grid(row=7, column=0)
+        self.input_tuser_nuevo = ttk.Entry(self.ventana_editar, font=('Calibri', 13))
+        self.input_tuser_nuevo.grid(row=7, column=1)
+    
+        # Boton Actualizar Producto
+        s = ttk.Style()
+        s.configure("my.TButton", font=("Calibri", 14, "bold"))
+        self.boton_eliminar = ttk.Button(self.ventana_editar, text="Eliminar", style="my.TButton", command=self.delete_usuario).grid(row=8, columnspan=2, sticky=W + E)
+
+    def delete_usuario(self):        
         conexion=conectarBBDD("localhost","app-vontade","root","")
         cursor=conexion.cursor()
         cursor.execute("DELETE FROM USERS_APLICACION WHERE ID='"+self.old_id.get()+"'")
