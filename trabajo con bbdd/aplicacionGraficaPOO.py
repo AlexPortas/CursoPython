@@ -30,7 +30,28 @@ class CrudPOO(Frame):
         
         self.frameDatos=LabelFrame(self.ventana, text="Registrar nuevo usuario", font=('Calibri', 16, 'bold'))
         self.frameDatos.grid(row=0, column=0, columnspan=4, pady=20)
-        self.crear_widgets(self.frameDatos, 1)
+
+        self.cuadroTextoNick=ttk.Entry(self.frameDatos, textvariable=self.miNick)
+        self.cuadroTextoNick.grid(row=1, column=2, padx=5, pady=5)
+        self.nickLabel=ttk.Label(self.frameDatos, text="Nick: ")
+        self.nickLabel.grid(row=1, column=1, sticky="w", padx=10)
+
+        self.cuadroTextoPwd=ttk.Entry(self.frameDatos, textvariable=self.miPwd)
+        self.cuadroTextoPwd.grid(row=2, column=2, padx=5, pady=5)
+        self.contraseñaLabel=ttk.Label(self.frameDatos, text="Contraseña: ")
+        self.contraseñaLabel.grid(row=2, column=1, sticky="w", padx=10)
+
+        self.cuadroTextoTUser=ttk.Entry(self.frameDatos, textvariable=self.miTUser)
+        self.cuadroTextoTUser.grid(row=3, column=2, padx=5, pady=5)
+        self.tipoUserLabel=ttk.Label(self.frameDatos, text="Tipo usuario: ")
+        self.tipoUserLabel.grid(row=3, column=1, sticky="w", padx=10)
+
+        s = ttk.Style()
+        s.configure("my.TButton", font=("Calibri", 14, "bold"))
+        self.btnGuardar=ttk.Button(self.frameDatos, text="Crear usuario", style="my.TButton", command=self.add_usuario)
+        self.btnGuardar.grid(row=4, column=1, columnspan=2, sticky=W+E)
+
+        #crear tabla
         self.tabla=ttk.Treeview(height=20, columns=("Nombre","Contraseña","Tipo"), style="mystyle.Treeview")
         self.tabla.grid(row=4, columnspan=2)
         self.tabla.column("#0", width=80, anchor=CENTER)
@@ -70,22 +91,6 @@ class CrudPOO(Frame):
         self.barraMenu.add_cascade(label="Refrescar", menu=self.datosMenu)
         self.barraMenu.add_cascade(label="Deseleccionar usuario", menu=self.borrarMenu)
         self.barraMenu.add_cascade(label="Acciones", menu=self.crudMenu)
-
-    def crear_widgets(self, frame, opcion):
-        if opcion==1:
-            self.cuadroTextoNick=ttk.Entry(frame, textvariable=self.miNick).grid(row=1, column=2, padx=5, pady=5)
-            self.nickLabel=ttk.Label(frame, text="Nick: ").grid(row=1, column=1, sticky="w", padx=10)
-
-            self.cuadroTextoPwd=ttk.Entry(frame, textvariable=self.miPwd).grid(row=2, column=2, padx=5, pady=5)
-            self.contraseñaLabel=ttk.Label(frame, text="Contraseña: ").grid(row=2, column=1, sticky="w", padx=10)
-
-            self.cuadroTextoTUser=ttk.Entry(frame, textvariable=self.miTUser).grid(row=3, column=2, padx=5, pady=5)
-            self.tipoUserLabel=ttk.Label(frame, text="Tipo usuario: ").grid(row=3, column=1, sticky="w", padx=10)
-
-            s = ttk.Style()
-            s.configure("my.TButton", font=("Calibri", 14, "bold"))
-            self.btnGuardar=ttk.Button(frame, text="Crear usuario", style="my.TButton", command=self.add_usuario)
-            self.btnGuardar.grid(row=4, column=1, columnspan=2, sticky=W+E)
 
     def crear_datos(self):
         conexion=conectarBBDD("localhost","app-vontade","root","")
@@ -139,39 +144,37 @@ class CrudPOO(Frame):
         self.miNick.set(self.tabla.item(self.tabla.selection())['values'][0])
         self.miPwd.set(self.tabla.item(self.tabla.selection())['values'][1])
         self.miTUser.set(self.tabla.item(self.tabla.selection())['values'][2])
-        #Ventana nueva (editar usuario
-        self.ventana_editar = Toplevel()  # Crear una ventana por delante de la principal
-        self.ventana_editar.title("Editar Usuario")  # Titulo de la ventana
-        self.ventana_editar.resizable(1, 1)
+                
+        #Ventana nueva eliminar usuario
+        self.ventana_eliminar = Toplevel()  # Crear una ventana por delante de la principal
+        self.ventana_eliminar.title("Eliminar Usuario")  # Titulo de la ventana
+        self.ventana_eliminar.resizable(1, 1)
 
-        titulo = Label(self.ventana_editar, text='Edición de Usuario', font=('Calibri', 50, 'bold'))
+        titulo = Label(self.ventana_eliminar, text='¿Quieres eliminar a?', font=('Calibri', 50, 'bold'))
         titulo.grid(column=0, row=0, columnspan=2)
 
-        self.etiqueta_nick_anituguo = ttk.Label(self.ventana_editar, text = "Nick antiguo: ", font=('Calibri', 13)).grid(row=2, column=0)
-        self.input_nick_antiguo = ttk.Entry(self.ventana_editar, textvariable=self.old_nick, state='readonly', font=('Calibri', 13)).grid(row=2, column=1)
+        self.etiqueta_nick = ttk.Label(self.ventana_eliminar, text = "Nick: ", font=('Calibri', 13))
+        self.etiqueta_nick.grid(row=2, column=0)
+        self.input_nick = ttk.Entry(self.ventana_eliminar, textvariable=self.miNick, state='readonly', font=('Calibri', 13))
+        self.input_nick.grid(row=2, column=1)
+                
+        self.etiqueta_pwd = ttk.Label(self.ventana_eliminar, text="Contraseña: ", font=('Calibri', 13))
+        self.etiqueta_pwd.grid(row=3, column=0)
+        self.input_pwd = ttk.Entry(self.ventana_eliminar, textvariable=self.miPwd, state='readonly', font=('Calibri', 13))
+        self.input_pwd.grid(row=3, column=1)
         
-        self.etiqueta_nick_nuevo = ttk.Label(self.ventana_editar, text="Nick nuevo: ", font=('Calibri', 13)).grid(row=3, column=0)
-        self.input_nick_nuevo = ttk.Entry(self.ventana_editar, font=('Calibri', 13))
-        self.input_nick_nuevo.grid(row=3, column=1)
-        
-        self.etiqueta_pwd_anituguo = ttk.Label(self.ventana_editar, text="Contraseña antiguo: ", font=('Calibri', 13)).grid(row=4, column=0)
-        self.input_pwd_antiguo = ttk.Entry(self.ventana_editar, textvariable=self.old_pwd, state='readonly', font=('Calibri', 13)).grid(row=4, column=1)
-        
-        self.etiqueta_pwd_nuevo = ttk.Label(self.ventana_editar, text="Contraseña nuevo: ", font=('Calibri', 13)).grid(row=5, column=0)
-        self.input_pwd_nuevo = ttk.Entry(self.ventana_editar, font=('Calibri', 13))
-        self.input_pwd_nuevo.grid(row=5, column=1)
-        
-        self.etiqueta_tuser_anituguo = ttk.Label(self.ventana_editar, text="Tipo antiguo: ", font=('Calibri', 13)).grid(row=6, column=0)
-        self.input_tuser_antiguo = ttk.Entry(self.ventana_editar, textvariable=self.old_tuser, state='readonly', font=('Calibri', 13)).grid(row=6, column=1)
-        
-        self.etiqueta_tuser_nuevo = ttk.Label(self.ventana_editar, text="Tipo nuevo: ", font=('Calibri', 13)).grid(row=7, column=0)
-        self.input_tuser_nuevo = ttk.Entry(self.ventana_editar, font=('Calibri', 13))
-        self.input_tuser_nuevo.grid(row=7, column=1)
+        self.etiqueta_tuser = ttk.Label(self.ventana_eliminar, text="Tipo: ", font=('Calibri', 13))
+        self.etiqueta_tuser.grid(row=4, column=0)
+        self.input_tuser = ttk.Entry(self.ventana_eliminar, textvariable=self.miTUser, state='readonly', font=('Calibri', 13))
+        self.input_tuser.grid(row=4, column=1)
     
         # Boton Actualizar Producto
         s = ttk.Style()
         s.configure("my.TButton", font=("Calibri", 14, "bold"))
-        self.boton_eliminar = ttk.Button(self.ventana_editar, text="Eliminar", style="my.TButton", command=self.delete_usuario).grid(row=8, columnspan=2, sticky=W + E)
+        self.boton_eliminar = ttk.Button(self.ventana_eliminar, text="Eliminar", style="my.TButton", command=self.delete_usuario)
+        self.boton_eliminar.grid(row=5, column=0, sticky=W + E)
+        self.btnEditar=ttk.Button(self.ventana_eliminar, text="CANCELAR", style="my.TButton", command=lambda:self.volver_usuario(self.ventana_eliminar))
+        self.btnEditar.grid(row=5, column=1, sticky=W+E)
 
     def delete_usuario(self):        
         conexion=conectarBBDD("localhost","app-vontade","root","")
@@ -204,31 +207,43 @@ class CrudPOO(Frame):
         titulo = Label(self.ventana_editar, text='Edición de Usuario', font=('Calibri', 50, 'bold'))
         titulo.grid(column=0, row=0, columnspan=2)
 
-        self.etiqueta_nick_anituguo = ttk.Label(self.ventana_editar, text = "Nick antiguo: ", font=('Calibri', 13)).grid(row=2, column=0)
-        self.input_nick_antiguo = ttk.Entry(self.ventana_editar, textvariable=self.old_nick, state='readonly', font=('Calibri', 13)).grid(row=2, column=1)
+        self.etiqueta_nick_anituguo = ttk.Label(self.ventana_editar, text = "Nick antiguo: ", font=('Calibri', 13))
+        self.etiqueta_nick_anituguo.grid(row=2, column=0)
+        self.input_nick_antiguo = ttk.Entry(self.ventana_editar, textvariable=self.old_nick, state='readonly', font=('Calibri', 13))
+        self.input_nick_antiguo.grid(row=2, column=1)
         
-        self.etiqueta_nick_nuevo = ttk.Label(self.ventana_editar, text="Nick nuevo: ", font=('Calibri', 13)).grid(row=3, column=0)
+        self.etiqueta_nick_nuevo = ttk.Label(self.ventana_editar, text="Nick nuevo: ", font=('Calibri', 13))
+        self.etiqueta_nick_nuevo.grid(row=3, column=0)
         self.input_nick_nuevo = ttk.Entry(self.ventana_editar, font=('Calibri', 13))
         self.input_nick_nuevo.grid(row=3, column=1)
         
-        self.etiqueta_pwd_anituguo = ttk.Label(self.ventana_editar, text="Contraseña antiguo: ", font=('Calibri', 13)).grid(row=4, column=0)
-        self.input_pwd_antiguo = ttk.Entry(self.ventana_editar, textvariable=self.old_pwd, state='readonly', font=('Calibri', 13)).grid(row=4, column=1)
+        self.etiqueta_pwd_anituguo = ttk.Label(self.ventana_editar, text="Contraseña antiguo: ", font=('Calibri', 13))
+        self.etiqueta_pwd_anituguo.grid(row=4, column=0)
+        self.input_pwd_antiguo = ttk.Entry(self.ventana_editar, textvariable=self.old_pwd, state='readonly', font=('Calibri', 13))
+        self.input_pwd_antiguo.grid(row=4, column=1)
         
-        self.etiqueta_pwd_nuevo = ttk.Label(self.ventana_editar, text="Contraseña nuevo: ", font=('Calibri', 13)).grid(row=5, column=0)
+        self.etiqueta_pwd_nuevo = ttk.Label(self.ventana_editar, text="Contraseña nuevo: ", font=('Calibri', 13))
+        self.etiqueta_pwd_nuevo.grid(row=5, column=0)
         self.input_pwd_nuevo = ttk.Entry(self.ventana_editar, font=('Calibri', 13))
         self.input_pwd_nuevo.grid(row=5, column=1)
         
-        self.etiqueta_tuser_anituguo = ttk.Label(self.ventana_editar, text="Tipo antiguo: ", font=('Calibri', 13)).grid(row=6, column=0)
-        self.input_tuser_antiguo = ttk.Entry(self.ventana_editar, textvariable=self.old_tuser, state='readonly', font=('Calibri', 13)).grid(row=6, column=1)
+        self.etiqueta_tuser_anituguo = ttk.Label(self.ventana_editar, text="Tipo antiguo: ", font=('Calibri', 13))
+        self.etiqueta_tuser_anituguo.grid(row=6, column=0)
+        self.input_tuser_antiguo = ttk.Entry(self.ventana_editar, textvariable=self.old_tuser, state='readonly', font=('Calibri', 13))
+        self.input_tuser_antiguo.grid(row=6, column=1)
         
-        self.etiqueta_tuser_nuevo = ttk.Label(self.ventana_editar, text="Tipo nuevo: ", font=('Calibri', 13)).grid(row=7, column=0)
+        self.etiqueta_tuser_nuevo = ttk.Label(self.ventana_editar, text="Tipo nuevo: ", font=('Calibri', 13))
+        self.etiqueta_tuser_nuevo.grid(row=7, column=0)
         self.input_tuser_nuevo = ttk.Entry(self.ventana_editar, font=('Calibri', 13))
         self.input_tuser_nuevo.grid(row=7, column=1)
     
         # Boton Actualizar Producto
         s = ttk.Style()
         s.configure("my.TButton", font=("Calibri", 14, "bold"))
-        self.boton_actualizar = ttk.Button(self.ventana_editar, text="Actualizar", style="my.TButton", command=lambda: self.actualizar_usuario(self.input_nick_nuevo.get(), self.input_pwd_nuevo.get(), self.input_tuser_nuevo.get(), self.old_id.get())).grid(row=8, columnspan=2, sticky=W + E)
+        self.boton_actualizar = ttk.Button(self.ventana_editar, text="Actualizar", style="my.TButton", command=lambda: self.actualizar_usuario(self.input_nick_nuevo.get(), self.input_pwd_nuevo.get(), self.input_tuser_nuevo.get(), self.old_id.get()))
+        self.boton_actualizar.grid(row=8, column=0, sticky=W + E)
+        self.btnEditar=ttk.Button(self.ventana_editar, text="CANCELAR", style="my.TButton", command=lambda:self.volver_usuario(self.ventana_editar))
+        self.btnEditar.grid(row=8, column=1, sticky=W+E)
 
     def actualizar_usuario(self, nick, pwd, tuser, id):
         conexion=conectarBBDD("localhost","app-vontade","root","")
@@ -244,6 +259,10 @@ class CrudPOO(Frame):
         self.limpiarCampos()
         self.actualizarTabla()
       
+    def volver_usuario(self, frame):
+        frame.destroy()
+        self.limpiarCampos()
+
 root=Tk()
 app=CrudPOO(root)
 app.mainloop()
