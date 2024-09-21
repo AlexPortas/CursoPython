@@ -84,9 +84,9 @@ class CrudPOO(Frame):
         self.borrarMenu.add_command(label="Deseleccionar", command=self.limpiarCampos)
 
         self.crudMenu=Menu(self.barraMenu, tearoff=0)
-        self.crudMenu.add_command(label="Crear usuario", command=lambda:self.crear_widgets(crear=True))
-        self.crudMenu.add_command(label="Modificar usuario", command=lambda:self.crear_widgets(modificar=True))
-        self.crudMenu.add_command(label="Eliminar usuario", command=lambda:self.crear_widgets(borrar=True))
+        self.crudMenu.add_command(label="Crear usuario")
+        self.crudMenu.add_command(label="Modificar usuario")
+        self.crudMenu.add_command(label="Eliminar usuario")
 
         self.barraMenu.add_cascade(label="Refrescar", menu=self.datosMenu)
         self.barraMenu.add_cascade(label="Deseleccionar usuario", menu=self.borrarMenu)
@@ -124,7 +124,8 @@ class CrudPOO(Frame):
         cursor=conexion.cursor()
         #cursor.execute("INSERT INTO USERS_APLICACION VALUES (NULL,'"+self.miNick.get()+"','"+self.miPwd.get()+"','"+self.miTUser.get()+"')")
         datos=self.miNick.get(),self.miPwd.get(),self.miTUser.get()
-        cursor.execute("INSERT INTO USERS_APLICACION VALUES (NULL,?,?,?)", datos)
+        #cursor.execute("INSERT INTO USERS_APLICACION VALUES (NULL,?,?,?)", datos)
+        cursor.execute("INSERT INTO USERS_APLICACION (nick, pwd, tipo) VALUES (?, ?, ?)", datos)
         conexion.commit()
         messagebox.showinfo("Nuevo usuario", "Has introducido un usuario")
         cursor.close()
@@ -133,13 +134,6 @@ class CrudPOO(Frame):
         self.actualizarTabla()
 
     def eliminar_usuario(self):
-        #Comprobación de que se seleccione un producto para eliminarlo
-        try:
-            self.tabla.item(self.tabla.selection())["text"]
-        except IndexError as e:
-            messagebox.showerror("Sin datos", "Por favor, seleccione un usuario")
-            return
-
         self.old_id.set(self.tabla.item(self.tabla.selection())['text'])
         self.miNick.set(self.tabla.item(self.tabla.selection())['values'][0])
         self.miPwd.set(self.tabla.item(self.tabla.selection())['values'][1])
@@ -187,14 +181,7 @@ class CrudPOO(Frame):
         self.limpiarCampos()
         self.actualizarTabla()
 
-    def editar_usuario(self):
-        #Comprobación de que se seleccione un producto para editarlo
-        try:
-            self.tabla.item(self.tabla.selection())["text"]
-        except IndexError as e:
-            messagebox.showerror("Sin datos", "Por favor, seleccione un usuario")
-            return
-        
+    def editar_usuario(self):        
         self.old_id.set(self.tabla.item(self.tabla.selection())['text'])
         self.old_nick.set(self.tabla.item(self.tabla.selection())['values'][0])
         self.old_pwd.set(self.tabla.item(self.tabla.selection())['values'][1])
@@ -248,9 +235,8 @@ class CrudPOO(Frame):
     def actualizar_usuario(self, nick, pwd, tuser, id):
         conexion=conectarBBDD("localhost","app-vontade","root","")
         cursor=conexion.cursor()
-       # cursor.execute("UPDATE USERS_APLICACION SET nick='"+nick+"', pwd='"+pwd+"',tipo='"+tuser+"' WHERE ID='"+id+"'")
-        datos=nick, pwd, tuser, id
-        cursor.execute("UPDATE USERS_APLICACION SET nick=?, pwd=?,tipo=? WHERE ID=?",datos)
+       # cursor.execute("UPDATE USERS_APLICACION SET nick='"+nick+"', pwd='"+pwd+"',tipo='"+tuser+"' WHERE ID='"+id+"'") 
+        cursor.execute("UPDATE USERS_APLICACION SET nick=?, pwd=?, tipo=? WHERE ID=?", (nick, pwd, tuser, id))
         conexion.commit()
         messagebox.showinfo("Actualizastes usuario", "Has actualizado un usuario")
         cursor.close()
