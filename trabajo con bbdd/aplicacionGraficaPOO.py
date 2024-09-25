@@ -18,6 +18,7 @@ class CrudPOO(Frame):
         self.old_nick=StringVar()
         self.old_pwd=StringVar()
         self.old_tuser=StringVar()
+        self.variables=self.miNick,self.miPwd,self.miTUser,self.old_id,self.old_nick,self.old_pwd,self.old_tuser
 
         #------------- barra de menu
 
@@ -73,9 +74,26 @@ class CrudPOO(Frame):
         self.btnEditar=ttk.Button(text="EDITAR", style="my.TButton", command=self.editar_usuario)
         self.btnEditar.grid(row=5, column=1, sticky=W+E)
 
-        self.crear_datos()
+        self.crear_datos(self.tabla)
         self.crear_menu()
-        
+
+    
+def crear_menu(self):
+    self.datosMenu=Menu(self.barraMenu, tearoff=0)
+    self.datosMenu.add_command(label="Mostrar datos", command=lambda:actualizarTabla(self.tabla))
+
+    self.borrarMenu=Menu(self.barraMenu, tearoff=0)
+    self.borrarMenu.add_command(label="Deseleccionar", command=lambda:limpiarCampos(self.variables))
+
+    self.crudMenu=Menu(self.barraMenu, tearoff=0)
+    self.crudMenu.add_command(label="Crear usuario")
+    self.crudMenu.add_command(label="Modificar usuario")
+    self.crudMenu.add_command(label="Eliminar usuario")
+
+    self.barraMenu.add_cascade(label="Refrescar", menu=self.datosMenu)
+    self.barraMenu.add_cascade(label="Deseleccionar usuario", menu=self.borrarMenu)
+    self.barraMenu.add_cascade(label="Acciones", menu=self.crudMenu)
+
 root=Tk()
 app=CrudPOO(root)
 app.mainloop()

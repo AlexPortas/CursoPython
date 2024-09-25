@@ -2,49 +2,6 @@ from tkinter import Button, Entry, Frame, Label, Menu, StringVar, Tk, simpledial
 from ConexionesBBDD import *
 from aplicacionGraficaPOO import *
 
-def crear_menu(self):
-    self.datosMenu=Menu(self.barraMenu, tearoff=0)
-    self.datosMenu.add_command(label="Mostrar datos", command=self.actualizarTabla)
-
-    self.borrarMenu=Menu(self.barraMenu, tearoff=0)
-    self.borrarMenu.add_command(label="Deseleccionar", command=self.limpiarCampos)
-
-    self.crudMenu=Menu(self.barraMenu, tearoff=0)
-    self.crudMenu.add_command(label="Crear usuario")
-    self.crudMenu.add_command(label="Modificar usuario")
-    self.crudMenu.add_command(label="Eliminar usuario")
-
-    self.barraMenu.add_cascade(label="Refrescar", menu=self.datosMenu)
-    self.barraMenu.add_cascade(label="Deseleccionar usuario", menu=self.borrarMenu)
-    self.barraMenu.add_cascade(label="Acciones", menu=self.crudMenu)
-
-def crear_datos(self):
-    conexion=conectarBBDD("localhost","app-vontade","root","")
-
-    cursor=conexion.cursor()
-
-    cursor.execute("SELECT * FROM USERS_APLICACION")
-
-    users=cursor.fetchall()
-    for u in users:
-        self.tabla.insert("",END,text=u[0], values=(u[1], u[2],u[3]))
-    cursor.close()
-    conexion.close()
-
-def actualizarTabla(self):
-    for fila in self.tabla.get_children():
-        self.tabla.delete(fila)
-    self.crear_datos()
-
-def limpiarCampos(self):
-    self.miNick.set("")
-    self.miPwd.set("")
-    self.miTUser.set("")
-    self.old_id.set("")
-    self.old_nick.set("")
-    self.old_pwd.set("")
-    self.old_tuser.set("")
-
 def add_usuario(self):
     conexion=conectarBBDD("localhost","app-vontade","root","")
     cursor=conexion.cursor()
