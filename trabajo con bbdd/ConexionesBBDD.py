@@ -15,10 +15,13 @@ def limpiarCampos(*args):
 
 def crear_datos(tabla):
     conexion=conectarBBDD("localhost","app-vontade","root","")
-    query="SELECT * FROM USERS_APLICACION"
-    users=db_consulta(conexion,query)
+    cursor=conexion.cursor()
+    cursor.execute("SELECT * FROM USERS_APLICACION")
+    users=cursor.fetchall() 
     for u in users:
         tabla.insert("",END,text=u[0], values=(u[1], u[2],u[3]))
+    cursor.close()
+    conexion.close()
 
 def actualizarTabla(tabla):
     for fila in tabla.get_children():

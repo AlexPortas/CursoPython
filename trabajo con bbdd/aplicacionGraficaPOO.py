@@ -49,7 +49,7 @@ class CrudPOO(Frame):
 
         s = ttk.Style()
         s.configure("my.TButton", font=("Calibri", 14, "bold"))
-        self.btnGuardar=ttk.Button(self.frameDatos, text="Crear usuario", style="my.TButton", command=add_usuario)
+        self.btnGuardar=ttk.Button(self.frameDatos, text="Crear usuario", style="my.TButton")#, command=add_usuario)
         self.btnGuardar.grid(row=4, column=1, columnspan=2, sticky=W+E)
 
         #crear tabla
@@ -69,30 +69,30 @@ class CrudPOO(Frame):
         s=ttk.Style()
         s.configure("my.TButton", font=("Calibri", 14, "bold"))
 
-        self.btnEliminar=ttk.Button(text="ELIMINAR", style="my.TButton", command=self.eliminar_usuario)
+        self.btnEliminar=ttk.Button(text="ELIMINAR", style="my.TButton")#, command=self.eliminar_usuario)
         self.btnEliminar.grid(row=5, column=0, sticky=W+E)
-        self.btnEditar=ttk.Button(text="EDITAR", style="my.TButton", command=self.editar_usuario)
+        self.btnEditar=ttk.Button(text="EDITAR", style="my.TButton")#, command=self.editar_usuario)
         self.btnEditar.grid(row=5, column=1, sticky=W+E)
 
-        self.crear_datos(self.tabla)
+        crear_datos(self.tabla)
         self.crear_menu()
 
-    
-def crear_menu(self):
-    self.datosMenu=Menu(self.barraMenu, tearoff=0)
-    self.datosMenu.add_command(label="Mostrar datos", command=lambda:actualizarTabla(self.tabla))
+        
+    def crear_menu(self):
+        self.datosMenu=Menu(self.barraMenu, tearoff=0)
+        self.datosMenu.add_command(label="Mostrar datos", command=lambda:actualizarTabla(self.tabla))
 
-    self.borrarMenu=Menu(self.barraMenu, tearoff=0)
-    self.borrarMenu.add_command(label="Deseleccionar", command=lambda:limpiarCampos(self.variables))
+        self.borrarMenu=Menu(self.barraMenu, tearoff=0)
+        self.borrarMenu.add_command(label="Deseleccionar", command=lambda:limpiarCampos(self.variables))
 
-    self.crudMenu=Menu(self.barraMenu, tearoff=0)
-    self.crudMenu.add_command(label="Crear usuario")
-    self.crudMenu.add_command(label="Modificar usuario")
-    self.crudMenu.add_command(label="Eliminar usuario")
+        self.crudMenu=Menu(self.barraMenu, tearoff=0)
+        self.crudMenu.add_command(label="Crear usuario")
+        self.crudMenu.add_command(label="Modificar usuario")
+        self.crudMenu.add_command(label="Eliminar usuario")
 
-    self.barraMenu.add_cascade(label="Refrescar", menu=self.datosMenu)
-    self.barraMenu.add_cascade(label="Deseleccionar usuario", menu=self.borrarMenu)
-    self.barraMenu.add_cascade(label="Acciones", menu=self.crudMenu)
+        self.barraMenu.add_cascade(label="Refrescar", menu=self.datosMenu)
+        self.barraMenu.add_cascade(label="Deseleccionar usuario", menu=self.borrarMenu)
+        self.barraMenu.add_cascade(label="Acciones", menu=self.crudMenu)
 
 root=Tk()
 app=CrudPOO(root)
