@@ -1,20 +1,17 @@
-from tkinter import Button, Entry, Frame, Label, Menu, StringVar, Tk, simpledialog, messagebox
+from tkinter import Button, Entry, Frame, Label, Menu, StringVar, Tk, Toplevel, simpledialog, messagebox
 from ConexionesBBDD import *
 from aplicacionGraficaPOO import *
 
-def add_usuario(self):
+def add_usuario(variables):
     conexion=conectarBBDD("localhost","app-vontade","root","")
-    cursor=conexion.cursor()
     #cursor.execute("INSERT INTO USERS_APLICACION VALUES (NULL,'"+self.miNick.get()+"','"+self.miPwd.get()+"','"+self.miTUser.get()+"')")
-    datos=self.miNick.get(),self.miPwd.get(),self.miTUser.get()
+    datos=variables[:3]
     #cursor.execute("INSERT INTO USERS_APLICACION VALUES (NULL,?,?,?)", datos)
-    cursor.execute("INSERT INTO USERS_APLICACION (nick, pwd, tipo) VALUES (?, ?, ?)", datos)
-    conexion.commit()
+    db_consulta(conexion,"INSERT INTO USERS_APLICACION (nick, pwd, tipo) VALUES (?, ?, ?)", (datos))
     messagebox.showinfo("Nuevo usuario", "Has introducido un usuario")
-    cursor.close()
     conexion.close()
-    self.limpiarCampos()
-    self.actualizarTabla()
+    limpiarCampos()
+    actualizarTabla()
 
 def eliminar_usuario(self):
     self.old_id.set(self.tabla.item(self.tabla.selection())['text'])

@@ -49,7 +49,7 @@ class CrudPOO(Frame):
 
         s = ttk.Style()
         s.configure("my.TButton", font=("Calibri", 14, "bold"))
-        self.btnGuardar=ttk.Button(self.frameDatos, text="Crear usuario", style="my.TButton")#, command=add_usuario)
+        self.btnGuardar=ttk.Button(self.frameDatos, text="Crear usuario", style="my.TButton", command=lambda:add_usuario(self.variables))
         self.btnGuardar.grid(row=4, column=1, columnspan=2, sticky=W+E)
 
         #crear tabla
