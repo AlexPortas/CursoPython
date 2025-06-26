@@ -1,19 +1,26 @@
-a="15"
+import os
+# from docx2pdf import convert
+import subprocess
+from tkinter import Tk, filedialog
 
-b="34"
+root=Tk()
+root.withdraw()
 
-print(int(a)+int(b))
+carpeta_entrada=filedialog.askdirectory(title="Selecione una carpeta")
+salida=os.path.join(carpeta_entrada,"pdf")
 
-a="15.4"
+os.makedirs(salida,exist_ok=True)
 
-b="34.3"
-
-print(float(a)+float(b))
-
-empleados = ["Ana", "Jose", "Maria", "Alex"]
-
-print("-".join(empleados))
-
-empleados = "Ana, Jose, Maria, Alex"
-
-print(empleados.split())
+for archivo in os.listdir(carpeta_entrada):
+    # if archivo.endswith(".docx"):
+    #     ruta_docx=os.path.join(carpeta_entrada,archivo)
+    #     ruta_pdf=os.path.join(carpeta_entrada,archivo.replace(".docx",".pdf"))
+    #     convert(ruta_docx,ruta_pdf)
+    if archivo.endswith(".odt"):
+        ruta_odt=os.path.join(carpeta_entrada,archivo)
+        comando = [
+             r"C:\Program Files\LibreOffice\program\soffice.exe", "--headless", "--convert-to", "pdf", ruta_odt, "--outdir", salida
+        ]
+        print(comando, ruta_odt)
+        subprocess.run(comando)
+        print(f"Convertido: {archivo} → PDF")
