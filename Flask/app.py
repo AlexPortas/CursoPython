@@ -6,7 +6,7 @@ app=Flask(__name__)
 empleados=["Alex", "Ana", "Bea", "Eva", "Pepe"]
 @app.route('/')
 def saludo():
-    return render_template("index.html", empleados=len(empleados))
+    return render_template("index.html", empleados=empleados, num_emp=len(empleados))
 
 @app.route('/quienes')
 def quienes():
