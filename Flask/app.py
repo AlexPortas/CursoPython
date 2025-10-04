@@ -12,9 +12,9 @@ def saludo():
 def quienes():
     return render_template("aboutus.html", empleados=empleados)
 
-@app.route('/usuarios/<string:usu>')
+@app.route('/usuarios/<int:usu>')
 def usuarios(usu):
-    return "El usuario es"+usu
+    return render_template("usuarios/usuarios.html", usu=usu)
 
 if __name__=="__main__":
     os.environ['FLASK_ENV']="development"
