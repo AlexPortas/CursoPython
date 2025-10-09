@@ -1,12 +1,5 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Página del usuario nº{{usu}}</title>
-    <link rel="stylesheet" href="{{url_for('static', filename='css/style.css')}}">
-</head>
-<body>
-    <h1>Página del usuario nº{{usu}}</h1>
-</body>
-</html>
+{% extends "base.html" %}
+{% block title %}Página del usuario nº{{usu}} {% endblock %}
+{% block content %}
+<h1>Página del usuario nº{{usu}}</h1>
+{% endblock %}
