@@ -3,17 +3,16 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>{% block title %} {% endblock $}</title>
+    <title>{% block title %} {% endblock %}</title>
     <link rel="stylesheet" href="{{url_for('static', filename='css/style.css')}}">
 </head>
 <body>
     <ul id="barra">
         <li class="elem"><a href="/">Inicio</a></li>
-        <li class="elem">Servicios</li>
-        <li class="elem">Productos</li>
-        <li class="elem">Contacto</li>
+        <li class="elem"><a href="/usuarios/16">Usuario 16</a></li>
+        <li class="elem"><a href="/quienes">Quienes somos</a></li>
     </ul>
 
-    {% block content %} {% endblock $}
+    {% block content %} {% endblock %}
 </body>
 </html>

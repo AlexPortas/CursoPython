@@ -4,9 +4,13 @@ body{
 
 #barra{
     margin: auto;
-    width: 80%;
+    width: 50%;
     list-style: none;
     border-bottom: 1px dotted #999;
     font-size: 2em;
     display: flex;
+    justify-content: space-between;
+}
+.elem{
+    align-content: center;
 }
