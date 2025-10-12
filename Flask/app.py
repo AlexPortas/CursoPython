@@ -16,6 +16,10 @@ def quienes():
 def usuarios(usu):
     return render_template("usuarios/usuarios.html", usu=usu)
 
+@app.route('/contacto')
+def contacta():
+    return render_template("contacto.html")
+
 if __name__=="__main__":
     os.environ['FLASK_ENV']="development"
     app.run(debug=True)

@@ -8,9 +8,25 @@ body{
     list-style: none;
     border-bottom: 1px dotted #999;
     font-size: 2em;
+    color: rgb(1,20,29);
     display: flex;
     justify-content: space-between;
 }
-.elem{
-    align-content: center;
+.elem a, .elem a:visited{
+    text-decoration: none;
+    color: rgb(1,20,29);
+}
+
+input {
+   -webkit-box-sizing: border-box;
+   box-sizing: border-box;
+   padding: 10px;
+   width: 100%;
+   margin-bottom: 10px;
+   border: 1px solid #ccc;
+   border-radius: 5px;
+}
+form{
+    max-width: 500px;
+    margin: 0 auto;
 }
