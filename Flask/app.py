@@ -1,7 +1,7 @@
 from flask import Flask, render_template, url_for, request, redirect
 import os
 
-from Flask.forms import SignupForm
+from forms import SignupForm
 
 app=Flask(__name__)
 
@@ -24,7 +24,7 @@ def usuarios(usu):
 def contacta():
     form=SignupForm()
 
-    if form.validate_on_submit:
+    if form.validate_on_submit():
         nombre=form.name.data
         correo=form.email.data
         pwd=form.password.data
