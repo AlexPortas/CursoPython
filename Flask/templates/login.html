@@ -1,0 +1,14 @@
+{% extends "base.html" %}
+{% block title %}Iniciar sesión{% endblock %}
+{% block content %}
+<p>Iniciar sesión:</p>
+<form action="" method="post">
+    <label for="nick">Nick</label>
+    <input type="text" name="nick" id="nick">
+
+    <label for="pwd">Contraseña</label>
+    <input type="password" name="pwd" id="pwd">
+
+    <input type="submit" id="btnLogin" value="Logim"> 
+</form>
+{% endblock %}

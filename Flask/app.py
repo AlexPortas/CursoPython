@@ -6,11 +6,11 @@ from forms import SignupForm
 app=Flask(__name__)
 
 app.config["SECRET_KEY"]="lqawerellj21o44joooooooo21"
-
+posts=[]
 empleados=["Alex", "Ana", "Bea", "Eva", "Pepe"]
 @app.route('/')
 def saludo():
-    return render_template("index.html", empleados=empleados, num_emp=len(empleados))
+    return render_template("index.html", empleados=empleados, num_emp=len(empleados),posts=posts)
 
 @app.route('/quienes')
 def quienes():
@@ -33,6 +33,17 @@ def contacta():
         print("Contraseña -----------------", pwd)
         return redirect(url_for("saludo"))
     return render_template("contacto.html", form=form)
+
+@app.route('/anhadir_post', methods=["GET","POST"])
+def anhadir_post():
+    global posts
+    if request.method=="POST":
+        titulo=request.form["titulo"]
+        entrada=request.form["entrada"]
+        posts.append("{}/r{}".format(titulo,entrada))
+
+        return redirect(url_for("saludo"))
+    return render_template("entrada.html")
 
 if __name__=="__main__":
     os.environ['FLASK_ENV']="development"
