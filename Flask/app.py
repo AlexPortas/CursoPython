@@ -40,10 +40,20 @@ def anhadir_post():
     if request.method=="POST":
         titulo=request.form["titulo"]
         entrada=request.form["entrada"]
-        posts.append("{}/r{}".format(titulo,entrada))
+        posts.append("{} --> {}".format(titulo,entrada))
 
         return redirect(url_for("saludo"))
     return render_template("entrada.html")
+
+@app.route('/login', methods=["GET","POST"])
+def inicia_sesion():
+    if request.method=="POST":
+        nick=request.form["nick"]
+        pwd=request.form["pwd"]
+        print(nick," --> ",pwd)
+
+        return redirect(url_for("saludo"))
+    return render_template("login.html")
 
 if __name__=="__main__":
     os.environ['FLASK_ENV']="development"
