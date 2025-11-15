@@ -2,10 +2,13 @@ from flask import Flask, render_template, url_for, request, redirect
 import os
 
 from forms import SignupForm
+from flask_login import LoginManager
 
 app=Flask(__name__)
 
 app.config["SECRET_KEY"]="lqawerellj21o44joooooooo21"
+login_manager=LoginManager(app)
+
 posts=[]
 empleados=["Alex", "Ana", "Bea", "Eva", "Pepe"]
 @app.route('/')
