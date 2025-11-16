@@ -2,7 +2,8 @@ from flask import Flask, render_template, url_for, request, redirect
 import os
 
 from forms import SignupForm
-from flask_login import LoginManager
+from flask_login import LoginManager, current_user, login_user, logout_user
+from models import users, get_user
 
 app=Flask(__name__)
 
@@ -50,13 +51,33 @@ def anhadir_post():
 
 @app.route('/login', methods=["GET","POST"])
 def inicia_sesion():
+    if current_user.is_authenticated:
+        return redirect(url_for("saludo"))
+
     if request.method=="POST":
         nick=request.form["nick"]
         pwd=request.form["pwd"]
-        print(nick," --> ",pwd)
 
-        return redirect(url_for("saludo"))
+        user=get_user(nick)
+        if user is not None and user.check_password(pwd):
+            login_user(user, remember=True)
+            next_page=request.args.get("next")
+            if not next_page:
+                next_page=url_for("saludo")
+            return redirect(next_page)
     return render_template("login.html")
+
+@login_manager.user_loader
+def load_user(user_id):
+    for u in users:
+        if u.id==int(user_id):
+            return u
+    return None
+
+@app.route('/cerrar_sesion')
+def cerrar_sesion():
+    logout_user()
+    return redirect(url_for("saludo"))
 
 if __name__=="__main__":
     os.environ['FLASK_ENV']="development"

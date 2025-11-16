@@ -13,4 +13,17 @@ class User(UserMixin):
         self.password=generate_password_hash(password)
 
     def check_password(self, password):
-        return check_password_hash(self.password,password)
+        # return check_password_hash(self.password,password)
+        return self.password==password
+    
+users=[]
+user=User(1,"Personal","to@vontade.org","123",True)
+users.append(user)
+user=User(2,"Martin","martin@vontade.org","123")
+users.append(user)
+
+def get_user(nick):
+    for u in users:
+        if u.name==nick:
+            return u
+    return None
