@@ -2,13 +2,14 @@ from flask import Flask, render_template, url_for, request, redirect
 import os
 
 from forms import SignupForm
-from flask_login import LoginManager, current_user, login_user, logout_user
+from flask_login import LoginManager, current_user, login_user, logout_user, login_required
 from models import users, get_user
 
 app=Flask(__name__)
 
 app.config["SECRET_KEY"]="lqawerellj21o44joooooooo21"
 login_manager=LoginManager(app)
+login_manager.login_view="inicia_sesion"
 
 posts=[]
 empleados=["Alex", "Ana", "Bea", "Eva", "Pepe"]
@@ -17,6 +18,7 @@ def saludo():
     return render_template("index.html", empleados=empleados, num_emp=len(empleados),posts=posts)
 
 @app.route('/quienes')
+@login_required
 def quienes():
     return render_template("aboutus.html", empleados=empleados)
 

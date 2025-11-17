@@ -12,7 +12,11 @@
         <li class="elem"><a href="/usuarios/16">Usuario 16</a></li>
         <li class="elem"><a href="/quienes">Quienes somos</a></li>
         <li class="elem"><a href="/contacto">Contacto</a></li>
-        <li class="elem"><a href="/login">Inicio sesión</a></li>
+        <li class="elem">{% if current_user.is_anonymous %} 
+            <a href="/login">Inicio sesión</a>
+        {% else %}
+        <a href="/cerrar_sesion">{{current_user.name}} </a>
+        {% endif %}</li>
     </ul>
 
     {% block content %} {% endblock %}
