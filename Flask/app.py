@@ -1,6 +1,6 @@
 from flask import Flask, render_template, url_for, request, redirect
 import os
-
+from flask_sqlalchemy import SQLAlchemy
 from forms import SignupForm
 from flask_login import LoginManager, current_user, login_user, logout_user, login_required
 from models import users, get_user
@@ -8,6 +8,10 @@ from models import users, get_user
 app=Flask(__name__)
 
 app.config["SECRET_KEY"]="lqawerellj21o44joooooooo21"
+app.config["SQLALCHEMY_DATABASE_URI"]="postgresql://postgres:root@localhost:5432/webFlask"
+app.config["SQLALCHEMY_TRACK_MODIFICATIONS"]=False
+db=SQLAlchemy(app)
+
 login_manager=LoginManager(app)
 login_manager.login_view="inicia_sesion"
 
