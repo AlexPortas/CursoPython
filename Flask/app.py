@@ -14,6 +14,9 @@ db.init_app(app)
 login_manager.init_app(app)
 login_manager.login_view="inicia_sesion"
 
+# @app.before_first_request
+# def create_table():
+#     db.create_all()
 posts=[]
 empleados=["Alex", "Ana", "Bea", "Eva", "Pepe"]
 @app.route('/')
@@ -63,21 +66,12 @@ def inicia_sesion():
         nick=request.form["nick"]
         pwd=request.form["pwd"]
 
-        user=get_user(nick)
+        user=User.query.filter_by(nombre=nick).first()
         if user is not None and user.check_password(pwd):
-            login_user(user, remember=True)
-            next_page=request.args.get("next")
-            if not next_page:
-                next_page=url_for("saludo")
-            return redirect(next_page)
+            login_user(user)
+            return redirect(url_for("saludo"))
     return render_template("login.html")
 
-@login_manager.user_loader
-def load_user(user_id):
-    for u in users:
-        if u.id==int(user_id):
-            return u
-    return None
 
 @app.route('/cerrar_sesion')
 def cerrar_sesion():
@@ -87,5 +81,5 @@ def cerrar_sesion():
 if __name__=="__main__":
     os.environ['FLASK_ENV']="development"
     with app.app_context():
-    db.create_all()
-    app.run(debug=True)
+        db.create_all()
+        app.run(debug=True)
