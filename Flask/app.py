@@ -8,7 +8,7 @@ from models import User, db, login_manager
 app=Flask(__name__)
 
 app.config["SECRET_KEY"]="lqawerellj21o44joooooooo21"
-app.config["SQLALCHEMY_DATABASE_URI"]="postgresql://postgres:root@localhost:5432/webFlask"
+app.config["SQLALCHEMY_DATABASE_URI"]="postgresql://postgres:root@localhost:5433/webFlask"
 app.config["SQLALCHEMY_TRACK_MODIFICATIONS"]=False
 db.init_app(app)
 login_manager.init_app(app)
@@ -82,4 +82,4 @@ if __name__=="__main__":
     os.environ['FLASK_ENV']="development"
     with app.app_context():
         db.create_all()
-        app.run(debug=True)
+    app.run(debug=True)

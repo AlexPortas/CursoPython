@@ -7,10 +7,10 @@ login_manager=LoginManager()
 
 class User(UserMixin, db.Model):
     __tablename__="Usuarios"
-    id=db.Column(db.integer, primary_key=True)
+    id=db.Column(db.Integer, primary_key=True)
     nombre=db.Column(db.String(80), nullable=False)
     email=db.Column(db.String(250), unique=True, nullable=False)
-    password=db.Column(db.String(20), nullable=False)
+    password=db.Column(db.String(250), nullable=False)
     is_admin=db.Column(db.Boolean, default=False)
 
     def set_password(self, password):
@@ -21,4 +21,4 @@ class User(UserMixin, db.Model):
 
 @login_manager.user_loader
 def load_user(user_id):
-    return User.get(user_id)
+    return User.query.get(user_id)
