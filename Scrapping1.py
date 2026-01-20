@@ -1,16 +1,26 @@
 import requests
 from bs4 import BeautifulSoup
 
-url="https://quotes.toscrape.com/"
 
-resp=requests.get(url)
+base="https://quotes.toscrape.com/page/"
 
-#print(resp.status_code)
+with open("citas3.txf", "w", encoding="utf-8") as fichero:
+    for pagina in range(1, 4):
 
-html=resp.text
+        url= base+str(pagina)+"/"
 
-#print(html[:500])
+        resp=requests.get(url)
 
-soup=BeautifulSoup(html, 'html.parser')
-citas=soup.find_all('div', class_='quote')
-print(citas[7].prettify())
+        #print(resp.status_code)
+
+        html=resp.text
+
+        #print(html[:500])
+
+        soup=BeautifulSoup(html, 'html.parser')
+        citas=soup.find_all('div', class_='quote')
+        for cita in citas:
+            texto=cita.find('span', class_='text').get_text()
+            autor=cita.find('small', class_='author').get_text()
+
+            fichero.write(f"{texto} -> {autor}\n")
